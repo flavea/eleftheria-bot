@@ -323,53 +323,84 @@ module.exports = {
         if (ronde != '') param = (userData1.HP > 0 && userData1.Heal >= 0) && (userData2.HP > 0 && userData2.Heal >= 0) && id < parseInt(ronde)
         else param = (userData1.HP > 0 && userData1.Heal >= 0) && (userData2.HP > 0 && userData2.Heal >= 0)
 
-        console.log(ronde)
         while (param) {
             let string = ''
             let user1ATK = tools.roll(userData1.ATK)
+            let oldHP = userData2.HP
             userData2.DEFResult = tools.roll(userData2.DEF)
             if (userData2.DEFResult <= user1ATK) userData2.HP = userData2.HP - user1ATK + userData2.DEFResult
 
             string += `★ ${userData1.name} (HP: ${userData1.HP}) menyerang ${userData2.name}, dengan **ATK Point: ${user1ATK}**\n`
-            string += `✿ ${userData2.name} melakukan defense dengan hasil **DEF point: ${userData2.DEFResult}**, sehingga sisa HP: ${userData2.HP}\n`
+            string += `✿ ${userData2.name} (HP: ${oldHP}) melakukan defense dengan hasil **DEF point: ${userData2.DEFResult}**, sehingga sisa HP: ${userData2.HP}\n`
 
             if (userData2.HP <= 0 && userData2.Heal != 0) {
-                let heal = tools.roll(`1d${userData2.InitialHP}`)
-                if (userData2.HP < 0) userData2.HP = 0
-                let newHP = userData2.HP + heal
-                if (newHP > userData2.InitialHP) newHP = userData2.InitialHP
-                userData2.HP = newHP
+                while (userData2.HP <= 0 && userData2.Heal != 0) {
+                    let heal = tools.roll(`1d${userData2.InitialHP}`)
+                    if (userData2.HP < 0) userData2.HP = 0
+                    let newHP = userData2.HP + heal
+                    if (newHP > userData2.InitialHP) newHP = userData2.InitialHP
+                    userData2.HP = newHP
 
-                userData2.Heal = userData2.Heal - 1
-                string += `✿ ${userData2.name} melakukan heal, sisa heal: ${userData2.Heal} | HP: ${userData2.HP}\n`
-            } else if (userData2.HP <= 0 && userData2.Heal == 0) {
-                string += `**${userData2.name}(HP: ${userData2.HP}) kalah, selamat ${userData1.name}!**\n`
+                    userData2.Heal = userData2.Heal - 1
+                    string += `✿ ${userData2.name} melakukan heal, sisa heal: ${userData2.Heal} | HP: ${userData2.HP}\n`
+
+                    user1ATK = tools.roll(userData1.ATK)
+                    oldHP = userData2.HP
+                    userData2.DEFResult = tools.roll(userData2.DEF)
+                    if (userData2.DEFResult <= user1ATK) userData2.HP = userData2.HP - user1ATK + userData2.DEFResult
+
+                    string += `★ ${userData1.name} (HP: ${userData1.HP}) menyerang ${userData2.name}, dengan **ATK Point: ${user1ATK}**\n`
+                    string += `✿ ${userData2.name} (HP: ${oldHP}) melakukan defense dengan hasil **DEF point: ${userData2.DEFResult}**, sehingga sisa HP: ${userData2.HP}\n`
+                }
+            }
+
+            if (userData2.HP <= 0 && userData2.Heal <= 0) {
+                string += `**${userData2.name} (HP: ${userData2.HP}) kalah, selamat ${userData1.name}!**\n`
             }
 
             if (userData2.HP > 0) {
                 let user2ATK = tools.roll(userData2.ATK)
+                oldHP = userData1.HP
                 userData1.DEFResult = tools.roll(userData1.DEF)
                 if (userData1.DEFResult <= user2ATK) userData1.HP = userData1.HP - user2ATK + userData1.DEFResult
 
                 string += `✿ ${userData2.name} (HP: ${userData2.HP}) menyerang ${userData1.name}, dengan **ATK Point: ${user2ATK}**\n`
-                string += `★ ${userData1.name} melakukan defense dengan hasil **DEF point: ${userData1.DEFResult}**, sehingga sisa HP: ${userData1.HP}\n`
+                string += `★ ${userData1.name} (HP: ${oldHP}) melakukan defense dengan hasil **DEF point: ${userData1.DEFResult}**, sehingga sisa HP: ${userData1.HP}\n`
 
                 if (userData1.HP <= 0 && userData1.Heal != 0) {
-                    let heal = tools.roll(`1d${userData1.InitialHP}`)
-                    if (userData1.HP < 0) userData1.HP = 0
-                    let newHP = userData1.HP + heal
-                    if (newHP > userData1.InitialHP) newHP = userData1.InitialHP
-                    userData1.HP = newHP
+                    while (userData1.HP <= 0 && userData1.Heal != 0) {
+                        let heal = tools.roll(`1d${userData1.InitialHP}`)
+                        if (userData1.HP < 0) userData1.HP = 0
+                        let newHP = userData1.HP + heal
+                        if (newHP > userData1.InitialHP) newHP = userData1.InitialHP
+                        userData1.HP = newHP
 
-                    userData1.Heal = userData1.Heal - 1
-                    string += `★ ${userData1.name} melakukan heal, sisa heal: ${userData1.Heal} | HP: ${userData1.HP}\n`
-                } else if (userData1.HP <= 0 && userData1.Heal == 0) {
-                    string += `**${userData1.name}(HP: ${userData1.HP}) kalah, selamat ${userData2.name}!**\n`
+                        userData1.Heal = userData1.Heal - 1
+                        string += `★ ${userData1.name} melakukan heal, sisa heal: ${userData1.Heal} | HP: ${userData1.HP}\n`
+
+
+                        user2ATK = tools.roll(userData2.ATK)
+                        oldHP = userData1.HP
+                        userData1.DEFResult = tools.roll(userData1.DEF)
+                        if (userData1.DEFResult <= user2ATK) userData1.HP = userData1.HP - user2ATK + userData1.DEFResult
+
+                        string += `✿ ${userData2.name} (HP: ${userData2.HP}) menyerang ${userData1.name}, dengan **ATK Point: ${user2ATK}**\n`
+                        string += `★ ${userData1.name} (HP: ${oldHP}) melakukan defense dengan hasil **DEF point: ${userData1.DEFResult}**, sehingga sisa HP: ${userData1.HP}\n`
+                    }
+                }
+
+                if (userData1.HP <= 0 && userData1.Heal <= 0) {
+                    string += `**${userData1.name} (HP: ${userData1.HP}) kalah, selamat ${userData2.name}!**\n`
                     break;
                 }
             }
 
             id++
+
+            if (ronde != '' && id >= parseInt(ronde)) {
+                if (userData1.HP > userData2.HP) string += `**Pertarungan sudah berlangsung terlalu lama, maka dari itu ${userData1.name}(HP: ${userData1.HP}) menang atas ${userData2.name} (HP: ${userData2.HP})!**\n`
+                else string += `**Pertarungan sudah berlangsung terlalu lama, maka dari itu ${userData2.name} (HP: ${userData2.HP}) menang atas ${userData1.name}(HP: ${userData1.HP})!**\n`
+            }
 
             message.channel.send({
                 embed: {
@@ -386,11 +417,6 @@ module.exports = {
                     timestamp: new Date()
                 }
             });
-
-            if (id >= parseInt(ronde)) {
-                if (userData1.HP > userData2.HP) message.channel.send(`Pertarungan sudah berlangsung terlalu lama, maka dari itu ${userData1.name}(HP: ${userData1.HP}) menang atas ${userData2.name}(HP: ${userData2.HP})!`)
-                else message.channel.send(`Pertarungan sudah berlangsung terlalu lama, maka dari itu ${userData2.name}(HP: ${userData2.HP}) menang atas ${userData1.name}(HP: ${userData1.HP})!`)
-            }
 
             if (ronde != '') param = (userData1.HP > 0 && userData1.Heal >= 0) && (userData2.HP > 0 && userData2.Heal >= 0) && id < parseInt(ronde)
             else param = (userData1.HP > 0 && userData1.Heal >= 0) && (userData2.HP > 0 && userData2.Heal >= 0)
