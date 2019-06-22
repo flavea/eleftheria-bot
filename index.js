@@ -4,10 +4,11 @@ const discord = require('discord.js')
 const eleftheria = require('./eleftheria.js')
 const tools = require('./tools.js')
 const client = new discord.Client()
-const curses = ['jomblo', 'gamon', 'bucin', 'emo', 'sayang', 'kangen', 'cinta']
+const curses = ['jomblo', 'gamon', 'bucin', 'emo', 'sayang', 'kangen', 'cinta', 'belok', 'kotor', 'suci', 'lemah', 'ingin']
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`)
+    client.user.setActivity("sudah upgrade uwu");
 })
 
 client.on('message', message => {
@@ -17,7 +18,7 @@ client.on('message', message => {
     const args = message.content.split(/ +/);
     const command = args.shift().toLowerCase();
 
-    if (command === '!curse') {
+    if (command === '!curse' || command === '!praise') {
         if (!message.mentions.users.size) {
             return message.reply('Tag dulu orangnya woy.');
         }
@@ -58,7 +59,7 @@ client.on('message', message => {
         }
     }
 
-    if (command === '!detailed') {
+    if (command === '!detail') {
         if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.');
         else if (isNaN(parseInt(args[0]))) return message.reply('Harus angka oi.');
         else {
@@ -71,8 +72,10 @@ client.on('message', message => {
         if (typeof args[0] == 'undefined' || typeof args[1] == 'undefined') return message.reply('Harus ada dua id user oi.');
         else if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return message.reply('Harus angka oi ID-nya.');
         else {
+            let ronde = ''
+            if (typeof args[2] != 'undefined' && !isNaN(parseInt(args[2]))) ronde = parseInt(args[2])
             message.reply('Ambil data dulu, gan')
-            eleftheria.PvP(client, message, args[0], args[1])
+            eleftheria.PvP(client, message, args[0], args[1], ronde)
         }
     }
 
@@ -100,6 +103,42 @@ client.on('message', message => {
         message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/520167288029315085/589829276782690304/unknown.png"] });
     }
 
+    if (command === '!chart') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/488307706655014967/569213024418922498/CANDA_AJA_YA_BUAT_GOSIP_GOSIP_DISCORD.png"] });
+    }
+
+    if (command === '!nicollo') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/488307706655014967/583729276055060499/colloo.jpg"] });
+    }
+
+    if (command === '!bunga') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/488307706655014967/583722009222184961/eze1.jpg"] });
+    }
+
+    if (command === '!halo') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/488307706655014967/583722009222184961/eze1.jpg"] });
+    }
+
+    if (command === '!mykola') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/520167288029315085/579647943225769985/89666ef763e4a1afe86c60d195649cee.png"] });
+    }
+
+    if (command === '!avenge') {
+        message.channel.send("", { files: ["https://i.ibb.co/kDrNWL4/avenge3.jpg"] });
+    }
+
+    if (command === '!member') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/520167288029315085/571658842580975627/unknown.png"] });
+    }
+
+    if (command === '!mykola2') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/520167288029315085/570510582977921059/Screenshot_20190424-142411_Discord.jpg"] });
+    }
+
+    if (command === '!hoax') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/520167288029315085/570272822912352316/Screenshot_20190423-224000_Discord.jpg"] });
+    }
+
     if (command === '!bantu') {
         message.channel.send({
             embed: {
@@ -115,13 +154,13 @@ client.on('message', message => {
                 },
                 fields: [{
                     name: 'Yang lumayan lah bisa dipakai',
-                    value: '`!curse <mention orangnya>` untuk merutuki orang\n`!ddr 1d5` untuk dice roll'
+                    value: '`!curse <mention orangnya>` untuk merutuki orang\n`!praise <mention orangnya>` untuk memuji orang\n`!ddr 1d5` untuk dice roll'
                 }, {
                     name: 'Yang...umm, cobain aja sendiri',
-                    value: '!brie, !makanya, !poppy, !hypnos, !meleduck, !saatlihatplot'
+                    value: '!brie, !makanya, !poppy, !hypnos, !meleduck, !saatlihatplot, !chart, !nicollo, !bunga, !halo, !mykola, !mykola2, !hoax'
                 }, {
                     name: 'Berhubungan sama forum, tapi masih percobaan',
-                    value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detailed <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2>  ` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
+                    value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
                 }],
                 timestamp: new Date()
             }
