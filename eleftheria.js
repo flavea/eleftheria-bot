@@ -6,7 +6,6 @@ const forum = process.env.FORUM
 module.exports = {
     fetchLatestTopics: async function(client, message, amount) {
         const browser = await puppeteer.launch({
-            headless: false,
             'args': [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
@@ -79,7 +78,6 @@ module.exports = {
     searchCampers: async function(client, message, camper) {
 
         const browser = await puppeteer.launch({
-            headless: false,
             'args': [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
@@ -166,7 +164,6 @@ module.exports = {
     },
     getUser: async function(client, message, id) {
         const browser = await puppeteer.launch({
-            headless: false,
             'args': [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
@@ -270,7 +267,6 @@ module.exports = {
     },
     PvP: async function(client, message, id1, id2) {
         const browser = await puppeteer.launch({
-            headless: false,
             'args': [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
