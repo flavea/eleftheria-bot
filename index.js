@@ -88,7 +88,7 @@ client.on('message', message => {
     if (command === '!pvp') {
         if (typeof args[0] == 'undefined' || typeof args[1] == 'undefined') return message.reply('Harus ada dua id user oi.');
         else if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return message.reply('Harus angka oi ID-nya.');
-        else if (message.content.trim() == '!pvp 186 186') return message.reply('Maaf, pvp Nicollo vs Nicollo tanpa limit ronde diban, lelah lihatnya.');
+        else if (message.content.trim() == '!pvp 286 286') return message.reply('Maaf, pvp Nicollo vs Nicollo tanpa limit ronde diban, lelah lihatnya.');
         else if (message.content.trim() == '!pvp 189 189') return message.reply('Maaf, pvp Dorcas vs Dorcas juga  diban kalau tanpa limit ronde, *please have mercy*.');
         else if (message.content.trim() == '!pvp 87 87') return message.reply('Maaf, pvp Aspyn vs Aspyn juga  diban kalau tanpa limit ronde, *please have mercy*.');
         else {
