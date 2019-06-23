@@ -179,6 +179,60 @@ client.on('message', message => {
         message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592230947416571914/285e1bccf41a5134c68852e709355707.png"] });
     }
 
+    if (command === '!iris') {
+        message.channel.send("https://open.spotify.com/track/6Qyc6fS4DsZjB2mRW9DsQs");
+    }
+
+    if (command === '!pacar2') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364256071254019/Screenshot_20190324-123016_Discord.jpg"] });
+    }
+
+    if (command === '!salah') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364256071254023/Screenshot_20190322-130314_Discord.jpg"] });
+    }
+
+    if (command === '!cinta') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364383993331734/53b90f3004a740fef3976b5a8f39342c.png"] });
+    }
+
+    if (command === '!malu') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364384458768399/IMG_20190116_113554.jpg"] });
+    }
+
+    if (command === '!brie2') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364462170701864/Screenshot_20181208-221635.jpg"] });
+    }
+
+    if (command === '!epo') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364462753972226/b01512f168d8d3bb7ff3ea59151d38ce.png"] });
+    }
+
+    if (command === '!siapa') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592376135069728768/Screenshot_20190623-223010_Discord.jpg"] });
+    }
+
+    if (command === '!tagih') {
+
+        if (!message.mentions.users.size) {
+            message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"] });
+        } else {
+
+            let mentioned = ''
+            message.mentions.users.forEach(tagged => {
+                const len = curses.length;
+                const res = Math.floor(Math.random() * (len - 1))
+
+                mentioned += `<@${tagged.id}>`
+            })
+
+            message.channel.send(mentioned, { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"] });
+        }
+    }
+
+    if (command === '!nagih') {
+        message.channel.send("", { files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"] });
+    }
+
     if (command === '!guide') {
         if (!message.mentions.users.size) {
             return message.reply('Tag orang dulu.');
@@ -210,10 +264,10 @@ client.on('message', message => {
                 },
                 fields: [{
                     name: 'Yang lumayan lah bisa dipakai',
-                    value: '`!curse <mention orangnya>` untuk merutuki orang, boleh tag lebih dari satu.\n`!praise <mention orangnya>`, boleh tag lebih dari satu.\n`!remind <mention orangnya>` untuk mengingatkan orang, boleh tag lebih dari satu.\n`!guide <mention orangnya>` untuk mengarahkan orang, boleh tag lebih dari satu.\n`!ddr 1d5` untuk dice roll'
+                    value: '`!curse <mention orangnya>` untuk merutuki orang, boleh tag lebih dari satu.\n`!praise <mention orangnya>`, boleh tag lebih dari satu.\n`!remind <mention orangnya>` untuk mengingatkan orang, boleh tag lebih dari satu.\n`!tagis <mention orangnya>` untuk tagih repp, boleh tag lebih dari satu.\n`!guide <mention orangnya>` untuk mengarahkan orang, boleh tag lebih dari satu.\n`!ddr 1d5` untuk dice roll'
                 }, {
                     name: 'Yang...umm, cobain aja sendiri',
-                    value: '!brie, !makanya, !poppy, !hypnos, !meleduck, !saatlihatplot, !chart, !nicollo, !bunga, !halo, !mykola, !mykola2, !hoax, !member, !pacar, !haha, !hihi, !cokiber, !gak'
+                    value: '!brie, !makanya, !poppy, !hypnos, !meleduck, !saatlihatplot, !chart, !nicollo, !bunga, !halo, !mykola, !mykola2, !hoax, !member, !pacar, !haha, !hihi, !cokiber, !gak, !pacar2, !salah, !cinta, !malu, !brie2, !epo, !siapa, !iris'
                 }, {
                     name: 'Berhubungan sama forum, tapi masih percobaan',
                     value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
