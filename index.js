@@ -259,7 +259,7 @@ client.on('message', message => {
                     mentioned += `<@${tagged.id}>`
                 })
 
-                message.channel.send(`${mentioned}, katanya <@${message.author.id} kangen nich. Unch, unch, ucu deh kalian.`);
+                message.channel.send(`${mentioned}, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian.`);
             }
             break
         case '!bantu':
