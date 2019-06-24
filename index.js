@@ -6,7 +6,6 @@ const tools = require('./tools.js')
 const request = require("request")
 const client = new discord.Client()
 const API = process.env.API
-const curses = ['jomblo', 'gamon', 'bucin', 'emo', 'sayang', 'kangen', 'cinta', 'belok', 'kotor', 'suci', 'lemah', 'ingin']
 const reminders = ['Let go of the past. Today, you are a new person', 'Incase you have forgotten; you matter, you are loved, you are worthy', 'You can not do everything on a single day.', 'Lighten up on yourself. No one is perfect. Gently accept your humanness.', 'If you look into your own heart, and you find nothing wrong there, what is there to worry about? What is there to fear.', 'Nothing external to you has any power over you.', 'Self-compassion is simply giving the same kindness to ourselves that we would give to others.', 'You are beautiful. Know this. Anyone who tells you otherwise is simply lying. You are beautiful. ', 'Love yourself first, and everything else falls in line. You really have to love yourself to get anything done in this world.', 'To be beautiful means to be yourself. You don not need to be accepted by others. You need to accept yourself. ', 'You must love yourself before you love another. By accepting yourself and fully being what you are, your simple presence can make others happy.', 'Stop focusing on how stressed you are, and remember how blessed you are.']
 
 
@@ -42,9 +41,13 @@ client.on('message', message => {
 
                 if (body.length > 0) {
                     body.forEach(v => {
-                        message.channel.send(v.message == null ? '' : v.message, {
-                            files: [v.attachment == null ? '' : v.attachment]
-                        });
+                        if (v.attachment != '') {
+                            message.channel.send(v.message == '' ? '' : v.message, {
+                                files: [v.attachment == null ? '' : v.attachment]
+                            });
+                        } else if (v.message != null) {
+                            message.channel.send(v.message)
+                        }
                     })
                 }
             });
@@ -80,7 +83,7 @@ client.on('message', message => {
 
                         body = JSON.parse(body)
 
-                        if(body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`);
+                        if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`);
                     });
 
                 })
@@ -118,7 +121,7 @@ client.on('message', message => {
 
                         body = JSON.parse(body)
 
-                        if(body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`);
+                        if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`);
                     });
 
                 })
@@ -136,38 +139,41 @@ client.on('message', message => {
 
                 body = parseInt(body)
 
-                message.mentions.users.forEach(tagged => {
-                    const res = Math.floor(Math.random() * body) + 1
 
-                    options = {
-                        method: 'GET',
-                        url: `${API}reminders`,
-                        qs: {
-                            quote_id: res
-                        }
-                    };
+                const res = Math.floor(Math.random() * body) + 1
 
-                    request(options, function (error, response, body) {
-                        if (error) throw new Error(error);
+                options = {
+                    method: 'GET',
+                    url: `${API}reminders`,
+                    qs: {
+                        quote_id: res
+                    }
+                };
 
-                        body = JSON.parse(body)
+                request(options, function (error, response, body) {
+                    if (error) throw new Error(error);
+
+                    body = JSON.parse(body)
+
+                    if(body.length > 0){
 
                         if (!message.mentions.users.size) {
-                            return message.reply(body.quote);
+                            return message.reply(body[0].quote);
                         }
-            
+    
                         message.mentions.users.forEach(tagged => {
-                            message.channel.send(`<@${tagged.id}> ${body.quote}`);
+                            message.channel.send(`<@${tagged.id}> ${body[0].quote}`);
                         })
-                    });
 
-                })
+                    }
+                });
             });
 
             break;
         case '!ddr':
             if (typeof args[0] == 'undefined') return message.reply('Mana parameternyaa');
             else tools.rollMessage(message, args[0])
+            break
         case '!latest':
             let amount = 10
             if (typeof args[0] == 'undefined') amount = 10
@@ -205,7 +211,7 @@ client.on('message', message => {
             else {
                 let ronde = ''
                 if (typeof args[2] != 'undefined' && !isNaN(parseInt(args[2]))) ronde = parseInt(args[2])
-                if(ronde > 300) return message.reply('Maaf, ronde gak boleh lebih dari 300. Cape.');
+                if (ronde > 300) return message.reply('Maaf, ronde gak boleh lebih dari 300. Cape.');
                 message.reply('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
                 eleftheria.PvP(client, message, args[0], args[1], ronde)
             }
