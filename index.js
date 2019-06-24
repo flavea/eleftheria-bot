@@ -223,7 +223,7 @@ client.on('message', message => {
                 });
             } else {
                 message.mentions.users.forEach(tagged => {
-                    mentioned += `<@${tagged.id}>`
+                    mentioned += `<@${tagged.id}> `
                 })
 
                 message.channel.send(mentioned, {
@@ -237,7 +237,7 @@ client.on('message', message => {
             }
 
             message.mentions.users.forEach(tagged => {
-                mentioned += `<@${tagged.id}>`
+                mentioned += `<@${tagged.id}> `
             })
 
             message.channel.send(mentioned, {
@@ -249,14 +249,15 @@ client.on('message', message => {
             else if (typeof args[0] != 'undefined' && !message.mentions.users.size) {
                 name = args.join(' ')
                 let user = message.guild.members.find(user => user.nickname == name);
+                if(user == null ) user = message.guild.members.find(user => user.username == name);
 
                 if (user != null) {
                     if (message.author.id == user.id) return message.reply('Apa-apaan kangen diri sendiri. Cuh.');
                     else message.channel.send(`<@${user.id}>, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian. `);
-                } else return message.reply(`Uhmmm, ${args[0]} gak ketemu di sini, coba cek lagi nicknamenya, langsung ngomong ke orangnya.`);
+                } else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`);
             } else if (message.mentions.users.size) {
                 message.mentions.users.forEach(tagged => {
-                    mentioned += `<@${tagged.id}>`
+                    mentioned += `<@${tagged.id}> `
                 })
 
                 message.channel.send(`${mentioned}, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian.`);
