@@ -317,7 +317,7 @@ module.exports = {
 
         browser.close()
 
-        message.channel.send(`**${userData1.name} vs ${userData2.name}** \n Battle dimulai!`);
+        message.channel.send(`**${userData1.name} vs ${userData2.name}**\nBattle dimulai!`);
 
         let id = 1
         let param = true
