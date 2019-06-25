@@ -290,8 +290,8 @@ module.exports = {
             return uData
         });
 
-        if (typeof userData1.name == "undefined") return message.channel.send(`User ${id} ghaib, gak ketemu!`);
-        else if (userData1.HP == "No Information") return message.channel.send(`User ${userData1.name} belum punya battle points, jadi belum bisa berantem, uwu`);
+        if (typeof userData1.name == "undefined") return message.channel.send(`User ${id1} ghaib, gak ketemu!`);
+        else if (userData1.HP == null) return message.channel.send(`User ${userData1.name} belum punya battle points, jadi belum bisa berantem, uwu`);
 
         await page.goto(forum + '/index.php?showuser=' + id2, { waitUntil: 'load', timeout: 3000000 });
 
@@ -310,8 +310,8 @@ module.exports = {
             return uData
         });
 
-        if (typeof userData2.name == "undefined") return message.channel.send(`User ${id} ghaib, gak ketemu!`);
-        else if (userData2.HP == "No Information") return message.channel.send(`User ${userData2.name} belum punya battle points, jadi belum bisa berantem, uwu`);
+        if (typeof userData2.name == "undefined") return message.channel.send(`User ${id2} ghaib, gak ketemu!`);
+        else if (userData2.HP == null) return message.channel.send(`User ${userData2.name} belum punya battle points, jadi belum bisa berantem, uwu`);
 
         if (id1 == id2) userData2.name = "KLON " + userData1.name
 
