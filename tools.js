@@ -42,5 +42,19 @@ module.exports = {
         }
 
         return res;
-    }
+    },
+    titleCase: function(str){
+
+        str = str.toLowerCase().split(' ');
+        let exceptions = ['of', 'and', 'or']
+     
+        let final = [ ];
+     
+         for(let  word of str){
+           if(!exceptions.includes(word)) final.push(word.charAt(0).toUpperCase()+ word.slice(1));
+         }
+     
+       return final.join(' ')
+     
+     }
 }
