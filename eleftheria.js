@@ -14,8 +14,8 @@ module.exports = {
         const page = await browser.newPage();
         await page.setViewport({ width: 0, height: 0 })
         await page.goto(forum + 'index.php?act=Login&CODE=00', { waitUntil: 'load', timeout: 3000000 });
-        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', 'Elektra Murdock');
-        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', '1j9u1l1i9a5n');
+        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME);
+        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD);
         await page.click('#ipbwrapper > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]');
         await page.click('#ipbwrapper > form > div > div:nth-child(6) > input');
         await page.waitForNavigation({ waitUntil: 'load' });
@@ -191,6 +191,7 @@ module.exports = {
                 uData.RS = document.querySelector('#info > div:nth-child(4) > span').innerText;
                 uData.CiriFisik = document.querySelector('#info > div:nth-child(5) > span').innerText;
                 uData.Trivia = document.querySelector('#info > div:nth-child(6) > span').innerText;
+                uData.Quote = document.querySelector('#profile-quote').innerText;
             }
             return uData
         });
@@ -251,6 +252,9 @@ module.exports = {
                         value: userData.RS,
                         inline: true
                     }, {
+                        name: 'Quote',
+                        value: userData.Quote
+                    }, {
                         name: 'Ciri Fisik',
                         value: userData.CiriFisik
                     }, {
@@ -264,6 +268,138 @@ module.exports = {
 
         browser.close()
 
+    },
+    getTopCampers: async function(client, message, limit) {
+
+        const browser = await puppeteer.launch({
+            'args': [
+                '--no-sandbox',
+                '--disable-setuid-sandbox'
+            ]
+        });
+        const page = await browser.newPage();
+        await page.setViewport({ width: 0, height: 0 })
+
+        await page.goto(forum + 'index.php?act=Members&max_results=' + limit +'&sort_key=posts&sort_order=desc', { waitUntil: 'load', timeout: 3000000 });
+
+        let data = await page.evaluate(() => {
+            let foundCampers = []
+            let elements = document.querySelectorAll('.camper');
+            if (elements.length > 0) {
+                elements.forEach((element) => {
+                    try {
+                        foundCampers.push({
+                            id: element.getAttribute('href').trim().replace('/index.php?showuser=', ''),
+                            url: element.getAttribute('href').trim(),
+                            name: element.querySelector('.camper-name > h2').innerText,
+                            title : element.querySelector('div:nth-child(3) > span').innerText,
+                            posts : element.querySelector('div:nth-child(5)').innerText
+                        });
+                    } catch (exception) {
+                        console.log(exception)
+                    }
+                });
+            }
+
+            return foundCampers
+        });
+
+        if (data.length > 0) {
+            let list = []
+            data.forEach((d, i) => {
+                list.push({
+                    name: `RANK ${i+1}`,
+                    value: `${d.id} - ${d.name} - ${tools.titleCase(d.title)} - ${tools.titleCase(d.posts)} [[Go to Profile](${forum}${d.url})]`,
+                    inline: true
+                })
+            })
+
+            message.channel.send({
+                embed: {
+                    color: 3447003,
+                    author: {
+                        name: client.user.username,
+                        icon_url: client.user.avatarURL
+                    },
+                    title: `Top ${limit} members`,
+                    url: forum + 'index.php?act=Members&max_results=' + limit +'&sort_key=posts&sort_order=desc',
+                    description: "Members dengan post count tertinggi.",
+                    fields: list,
+                    timestamp: new Date()
+                }
+            });
+
+            browser.close()
+        }
+    },
+    getTopToday: async function(client, message) {
+
+        const browser = await puppeteer.launch({
+            'args': [
+                '--no-sandbox',
+                '--disable-setuid-sandbox'
+            ]
+        });
+        const page = await browser.newPage();
+        await page.setViewport({ width: 0, height: 0 })
+        await page.goto(forum + 'index.php?act=Login&CODE=00', { waitUntil: 'load', timeout: 3000000 });
+        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME);
+        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD);
+        await page.click('#ipbwrapper > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]');
+        await page.click('#ipbwrapper > form > div > div:nth-child(6) > input');
+        await page.waitForNavigation({ waitUntil: 'load' });
+        await page.goto(forum + 'index.php?act=Stats', { waitUntil: 'load', timeout: 3000000 });
+
+        let data = await page.evaluate(() => {
+            let foundCampers = []
+            let elements = document.querySelectorAll('#ipbwrapper > div:nth-child(2) > table > tbody > tr');
+            let today = document.querySelector('#ipbwrapper > div:nth-child(2) > div.pformstrip').innerText;
+            if (elements.length > 0) {
+                elements.forEach((element) => {
+                    try {
+                        foundCampers.push({
+                            url: element.querySelector('td:nth-child(1) > a').getAttribute('href').trim(),
+                            name: element.querySelector('td:nth-child(1) > a').innerText,
+                            posts : element.querySelector('td:nth-child(2)').innerText,
+                            percentage : element.querySelector('td:nth-child(3)').innerText,
+                            today: today.replace('Total posts today: ', '')
+                        });
+                    } catch (exception) {
+                        console.log(exception)
+                    }
+                });
+            }
+
+            return foundCampers
+        });
+
+        if (data.length > 0) {
+            let list = []
+            data.forEach((d, i) => {
+                list.push({
+                    name: `RANK ${i+1}`,
+                    value: `${d.name} - ${d.posts}/${d.today} posts (${d.percentage}) [[Go to Profile](${d.url})]`,
+                    inline: true
+                })
+            })
+
+            message.channel.send({
+                embed: {
+                    color: 3447003,
+                    author: {
+                        name: client.user.username,
+                        icon_url: client.user.avatarURL
+                    },
+                    title: "Top Member Today",
+                    url: forum + 'index.php?act=Stats',
+                    description: "Members dengan post terbayang hari ini.",
+                    fields: list,
+                    timestamp: new Date()
+                }
+            });
+
+            browser.close()
+        }
     },
     PvP: async function(client, message, id1, id2, ronde) {
         const browser = await puppeteer.launch({

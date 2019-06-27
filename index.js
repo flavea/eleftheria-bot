@@ -155,12 +155,12 @@ client.on('message', message => {
 
                     body = JSON.parse(body)
 
-                    if(body.length > 0){
+                    if (body.length > 0) {
 
                         if (!message.mentions.users.size) {
                             return message.reply(body[0].quote);
                         }
-    
+
                         message.mentions.users.forEach(tagged => {
                             message.channel.send(`<@${tagged.id}> ${body[0].quote}`);
                         })
@@ -180,8 +180,24 @@ client.on('message', message => {
             else if (isNaN(parseInt(args[0]))) return message.reply('Parameter harus angka oi.');
             else amount = parseInt(args[0])
 
-            message.reply('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+            message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
             eleftheria.fetchLatestTopics(client, message, amount)
+            break
+        case '!top':
+            let limit = 10
+            if (typeof args[0] == 'undefined') limit = 10
+            else if (isNaN(parseInt(args[0]))) return message.reply('Parameter harus angka oi.');
+            else limit = parseInt(args[0])
+
+            if (limit > 25) return message.reply('Limit maksimal 25!')
+
+            message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+            eleftheria.getTopCampers(client, message, limit)
+            break
+
+        case '!toptoday':
+            message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+            eleftheria.getTopToday(client, message)
             break
         case '!search':
             if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.');
@@ -190,7 +206,7 @@ client.on('message', message => {
                 if (args.length > 1) name = args.join(' ')
                 if (name.length < 3) message.reply('Minimal 3 karakter lah nyarinya :(')
                 else {
-                    message.reply('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+                    message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
                     eleftheria.searchCampers(client, message, name)
                 }
             }
@@ -199,7 +215,7 @@ client.on('message', message => {
             if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.');
             else if (isNaN(parseInt(args[0]))) return message.reply('Harus angka oi.');
             else {
-                message.reply('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+                message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
                 eleftheria.getUser(client, message, args[0])
             }
             break;
@@ -212,7 +228,7 @@ client.on('message', message => {
                 let ronde = ''
                 if (typeof args[2] != 'undefined' && !isNaN(parseInt(args[2]))) ronde = parseInt(args[2])
                 if (ronde > 300) return message.reply('Maaf, ronde gak boleh lebih dari 300. Cape.');
-                message.reply('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+                message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
                 eleftheria.PvP(client, message, args[0], args[1], ronde)
             }
             break;
@@ -249,7 +265,7 @@ client.on('message', message => {
             else if (typeof args[0] != 'undefined' && !message.mentions.users.size) {
                 name = args.join(' ')
                 let user = message.guild.members.find(user => user.nickname == name);
-                if(user == null ) user = message.guild.members.find(user => user.username == name);
+                if (user == null) user = message.guild.members.find(user => user.username == name);
 
                 if (user != null) {
                     if (message.author.id == user.id) return message.reply('Apa-apaan kangen diri sendiri. Cuh.');
