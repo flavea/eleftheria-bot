@@ -319,7 +319,7 @@ client.on('message', message => {
                             value: commands
                         }, {
                             name: 'Berhubungan sama forum, tapi masih percobaan',
-                            value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
+                            value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n`!top <limit>` untuk melihat top posters overall\n`!toptoday` untuk melihat yang rajin hari ini.'
                         }],
                         timestamp: new Date()
                     }
