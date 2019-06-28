@@ -14,7 +14,6 @@ app.get('/', async function (req, res) {
 app.get('/fetch', async function (req, res) {
 
     const browser = await puppeteer.launch({
-        'headless': false,
         'args': [
             '--no-sandbox',
             '--disable-setuid-sandbox'
