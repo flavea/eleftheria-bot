@@ -392,7 +392,7 @@ module.exports = {
                     },
                     title: "Top Member Today",
                     url: forum + 'index.php?act=Stats',
-                    description: "Members dengan post terbayang hari ini.",
+                    description: "Members dengan post terbanyak hari ini.",
                     fields: list,
                     timestamp: new Date()
                 }
