@@ -1,60 +1,79 @@
 module.exports = {
-    rollMessage: function(message, code) {
+    rollMessage: function (message, code) {
         let res = 0
-        let init = 0
         const numbers = code.split('d');
-        const plus = code.split('+');
-        const minus = code.split('-');
+        let rot = numbers[0]
 
         if (numbers.length < 2) return message.reply('Salah format woy.');
 
-        if (plus.length >= 2) {
-            init = Math.floor(Math.random() * parseInt(numbers[1])) + parseInt(plus[0])
-            res = init + parseInt(plus[1])
+        const plus = numbers[1].split('+');
+        const minus = numbers[1].split('-');
 
-            return message.reply('Dice Roll **' + `${code} = ${init}+${plus[1]}**=` + '`' + res + '`');
+        if (plus.length >= 2) {
+            while (rot > 0) {
+                res += Math.floor(Math.random() * parseInt(plus[0])) + 1
+                rot--
+            }
+            res += parseInt(plus[1])
+            return message.reply(`Dice Roll ${code} = ${res}`);
         } else if (minus.length >= 2) {
-            init = Math.floor(Math.random() * parseInt(numbers[1])) - parseInt(minus[0])
-            res = init + parseInt(minus[1])
-            return message.reply('Dice Roll **' + `${code} = ${init}-${minus[1]}**=` + '`' + res + '`');
+            while (rot > 0) {
+                res += Math.floor(Math.random() * parseInt(minus[0])) + 1
+                rot--
+            }
+            res -= parseInt(minus[1])
+            return message.reply(`Dice Roll ${code} = ${res}`);
         } else {
-            res = Math.floor(Math.random() * parseInt(numbers[1])) + parseInt(numbers[0])
-            return message.reply('Dice Roll **' + `${code}**=` + '`' + res + '`');
+            while (rot > 0) {
+                res += Math.floor(Math.random() * parseInt(numbers[1])) + 1
+                rot--
+            }
+            return message.reply(`Dice Roll ${code} = ${res}`);
         }
     },
-    roll: function(code) {
+    roll: function (code) {
         let res = 0
-        let init = 0
         const numbers = code.split('d');
-        const plus = code.split('+');
-        const minus = code.split('-');
+        let rot = numbers[0]
 
         if (numbers.length < 2) return 'Error!';
 
+        const plus = numbers[1].split('+');
+        const minus = numbers[1].split('-');
+
         if (plus.length >= 2) {
-            init = Math.floor(Math.random() * parseInt(numbers[1])) + parseInt(plus[0])
-            res = init + parseInt(plus[1])
+            while (rot > 0) {
+                res += Math.floor(Math.random() * parseInt(plus[0])) + 1
+                rot--
+            }
+            res += parseInt(plus[1])
         } else if (minus.length >= 2) {
-            init = Math.floor(Math.random() * parseInt(numbers[1])) - parseInt(minus[0])
-            res = init + parseInt(minus[1])
+            while (rot > 0) {
+                res += Math.floor(Math.random() * parseInt(minus[0])) + 1
+                rot--
+            }
+            res -= parseInt(minus[1])
         } else {
-            res = Math.floor(Math.random() * parseInt(numbers[1])) + parseInt(numbers[0])
+            while (rot > 0) {
+                res += Math.floor(Math.random() * parseInt(numbers[1])) + 1
+                rot--
+            }
         }
 
         return res;
     },
-    titleCase: function(str){
+    titleCase: function (str) {
 
         str = str.toLowerCase().split(' ');
         let exceptions = ['of', 'and', 'or']
-     
-        let final = [ ];
-     
-         for(let  word of str){
-           if(!exceptions.includes(word)) final.push(word.charAt(0).toUpperCase()+ word.slice(1));
-         }
-     
-       return final.join(' ')
-     
-     }
+
+        let final = [];
+
+        for (let word of str) {
+            if (!exceptions.includes(word)) final.push(word.charAt(0).toUpperCase() + word.slice(1));
+        }
+
+        return final.join(' ')
+
+    }
 }
