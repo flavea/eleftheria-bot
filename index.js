@@ -170,6 +170,55 @@ client.on('message', message => {
             });
 
             break;
+
+        case '!topexp':
+            let count = 10
+            let list = []
+            if (typeof args[0] != 'undefined') count = args[0]
+            if (count > 25) return message.reply('MAKSIMAL 25 YA!!');
+
+            message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+
+            var options = {
+                method: 'GET',
+                url: `${API}emembers?_sort=EXP:DESC&_limit=${count}`
+            };
+
+            request(options, function (error, response, body) {
+                if (error) throw new Error(error);
+
+                body = JSON.parse(body)
+
+                body.forEach((d, i) => {
+                    list.push({
+                        name: `RANK ${i+1} - ${d.Name} (${d.UserID})`,
+                        value: `**EXP**: ${d.EXP} - **HP**: ${d.HP} - **ATK**: ${d.ATK} - **DEF**: ${d.DEF} [[Go to Profile](${d.Link})]`
+                    })
+                })
+
+                list.push({
+                    name: `LEBIH DETAIL`,
+                    value: `Untuk melihat data dengan lebih lengkap dan sortir berdasarkan HP, DEF, atau ATK, kunjungi [ini](http://eleftheria-bot.heroku.com/stats)`
+                })
+
+
+                message.channel.send({
+                    embed: {
+                        color: 3447003,
+                        author: {
+                            name: client.user.username,
+                            icon_url: client.user.avatarURL
+                        },
+                        title: "Top EXP Points",
+                        url: 'http://eleftheria-bot.heroku.com/stats',
+                        description: "Members dengan EXP points terbesar.",
+                        fields: list,
+                        timestamp: new Date()
+                    }
+                });
+            });
+
+            break;
         case '!ddr':
             if (typeof args[0] == 'undefined') return message.reply('Mana parameternyaa');
             else tools.rollMessage(message, args[0])
@@ -319,7 +368,7 @@ client.on('message', message => {
                             value: commands
                         }, {
                             name: 'Berhubungan sama forum, tapi masih percobaan',
-                            value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n`!top <limit>` untuk melihat top posters overall\n`!toptoday` untuk melihat yang rajin hari ini.'
+                            value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n`!top <limit>` untuk melihat top posters overall\n`!toptoday` untuk melihat yang rajin hari ini.\n`!topexp <limit>` untuk melihat members dengan exp tertinggi'
                         }],
                         timestamp: new Date()
                     }
