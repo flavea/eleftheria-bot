@@ -198,7 +198,7 @@ client.on('message', message => {
 
                 list.push({
                     name: `LEBIH DETAIL`,
-                    value: `Untuk melihat data dengan lebih lengkap dan sortir berdasarkan HP, DEF, atau ATK, kunjungi [ini](http://eleftheria-bot.heroku.com/stats)`
+                    value: `Untuk melihat data dengan lebih lengkap dan sortir berdasarkan HP, DEF, atau ATK, kunjungi [ini](http://eleftheria-bot.herokuapp.com/stats)`
                 })
 
 
@@ -210,7 +210,7 @@ client.on('message', message => {
                             icon_url: client.user.avatarURL
                         },
                         title: "Top EXP Points",
-                        url: 'http://eleftheria-bot.heroku.com/stats',
+                        url: 'http://eleftheria-bot.herokuapp.com/stats',
                         description: "Members dengan EXP points terbesar.",
                         fields: list,
                         timestamp: new Date()
