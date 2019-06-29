@@ -7,8 +7,8 @@ $(document).ready(function () {
             $("#content").hide()
             $("#loading").show()
             $.post("/get-pvp", {
-                    id1: "136",
-                    id2: "136"
+                    id1: $("#ID1").val(),
+                    id2: $("#ID2").val()
                 },
                 function (data, status) {
                     $('#result').html(data)
