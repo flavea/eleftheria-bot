@@ -30,10 +30,6 @@ $(document).ready(function () {
     $.ajax(settings).done(function (response) {
         response.forEach(e => {
             let ch = $('.tmpTR').clone().removeClass('tmpTR').show()
-            let ATK = e.ATK.split('d')
-            if (ATK.length > 1) ATK = ATK[1].split('+')
-            let DEF = e.DEF.split('d')
-            if (DEF.length > 1) DEF = DEF[1].split('+')
 
             let Weapon = e.Weapon.split(' - ')
             if (Weapon.length == 1) Weapon = e.Weapon.split(', ')
@@ -51,10 +47,10 @@ $(document).ready(function () {
             $('.iWeapon', ch).html(Weapon[0] == 'No Information' ? "-" : Weapon[0])
             $('.iHP', ch).html(e.HP)
             $('.iEXP', ch).html(e.EXP)
-            $('.iATKPoint', ch).html(ATK[0])
-            $('.iATKBase', ch).html(ATK[1])
-            $('.iDEFPoint', ch).html(DEF[0])
-            $('.iDEFBase', ch).html(DEF[1])
+            $('.iATKPoint', ch).html(e.ATK)
+            $('.iATKBase', ch).html(e.ATKP)
+            $('.iDEFPoint', ch).html(e.DEF)
+            $('.iDEFBase', ch).html(e.DEFP)
             $('.camps tbody').append(ch);
         });
 

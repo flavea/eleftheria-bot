@@ -252,7 +252,8 @@ app.get('/fetch', async function (req, res) {
             uData.HP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText);
             uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText;
             uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText;
-            if (uData.HP != "No Information" && uData.ATK != "No Information" && uData.DEF != "No Information") {
+            let Group = document.querySelector('#profile1 > div:nth-child(1) > span').innerText;
+            if (uData.HP != "No Information" && uData.ATK != "No Information" && uData.DEF != "No Information" && Group != "God" && Group != "Goddess") {
                 let ATK = uData.ATK.split('d')
                 let EXP = 0
                 if (ATK.length > 1) ATK = ATK[1].split('+')
@@ -292,7 +293,13 @@ app.get('/fetch', async function (req, res) {
 
                 body = JSON.parse(body)
 
+                let ATK = d.ATK.split('d')
+                if (ATK.length > 1) ATK = ATK[1].split('+')
+                let DEF = d.DEF.split('d')
+                if (DEF.length > 1) DEF = DEF[1].split('+')
+
                 if (body.length > 0) {
+
                     options = {
                         method: 'PUT',
                         url: API + 'emembers/' + body[0].id,
@@ -309,8 +316,10 @@ app.get('/fetch', async function (req, res) {
                             Post: d.postcount,
                             HP: d.HP,
                             EXP: d.EXP,
-                            ATK: d.ATK,
-                            DEF: d.DEF,
+                            ATK: ATK[0],
+                            DEF: DEF[0],
+                            ATKP: ATK[1],
+                            DEFP: DEF[1],
                             Link: forum + d.link
                         },
                         json: true
@@ -338,8 +347,10 @@ app.get('/fetch', async function (req, res) {
                             Post: d.postcount,
                             HP: d.HP,
                             EXP: d.EXP,
-                            ATK: d.ATK,
-                            DEF: d.DEF,
+                            ATK: ATK[0],
+                            DEF: DEF[0],
+                            ATKP: ATK[1],
+                            DEFP: DEF[1],
                             Link: forum + d.link
                         },
                         json: true

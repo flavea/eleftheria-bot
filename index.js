@@ -201,7 +201,6 @@ client.on('message', message => {
                     value: `Untuk melihat data dengan lebih lengkap dan sortir berdasarkan HP, DEF, atau ATK, kunjungi [ini](http://eleftheria-bot.herokuapp.com/stats)`
                 })
 
-
                 message.channel.send({
                     embed: {
                         color: 3447003,
@@ -250,7 +249,171 @@ client.on('message', message => {
             break
         case '!search':
             if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.');
-            else {
+            else if (args[0] == '--parent') {
+                if (typeof args[1] == 'undefined') return message.reply('Mau nyari siapa oi oi.');
+                else {
+                    let parent = args[1].toUpperCase()
+                    if (args.length > 2) args = args.shift().join(' ')
+
+                    message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+
+                    var options = {
+                        method: 'GET',
+                        url: `${API}emembers?_sort=EXP:DESC&Title_contains=${parent}`
+                    };
+
+                    request(options, function (error, response, body) {
+                        if (error) throw new Error(error);
+
+                        body = JSON.parse(body)
+                        if (body.length > 0) {
+                            var str = []
+                            var idx = 0
+                            str[idx] = ''
+                            body.forEach(d => {
+                                let newstr = `**${d.UserID} - ${d.Name}** | **Post Count:** ${d.Post} | **HP:** ${d.HP} | **EXP:** ${d.EXP} | **ATK**: 1d${d.ATK}+${d.ATKP} | **DEF**: 1d${d.DEF}+${d.DEFP} [[Go to Profile](${d.Link})]\n`
+
+                                let cpl = newstr + str[idx]
+                                if (cpl.length <= 1024) str[idx] = cpl
+                                else {
+                                    idx++
+                                    str[idx] = newstr
+                                }
+                            })
+
+                            let list = []
+                            str.forEach(d => {
+                                list.push({
+                                    name: `CHILDREN OF ${parent}`,
+                                    value: d
+                                })
+                            })
+
+                            message.channel.send({
+                                embed: {
+                                    color: 3447003,
+                                    author: {
+                                        name: client.user.username,
+                                        icon_url: client.user.avatarURL
+                                    },
+                                    fields: list,
+                                    timestamp: new Date()
+                                }
+                            });
+                        } else return message.reply(`${parent} BELUM PUNYA ANAK AAAAAAH.`);
+                    });
+                }
+
+            } else if (args[0] == '--ability') {
+                if (typeof args[1] == 'undefined') return message.reply('Mau nyari apa oi oi.');
+                else {
+                    let ability = tools.titleCase(args[1])
+                    if (args.length > 2) args = args.shift().join(' ')
+                    var options = {
+                        method: 'GET',
+                        url: `${API}emembers?_sort=EXP:DESC&Ability_contains=${ability}`
+                    };
+
+                    message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+
+                    request(options, function (error, response, body) {
+                        if (error) throw new Error(error);
+
+                        body = JSON.parse(body)
+                        if (body.length > 0) {
+                            var str = []
+                            var idx = 0
+                            str[idx] = ''
+                            body.forEach(d => {
+                                let newstr = `**${d.UserID} - ${d.Name}** | **Post Count:** ${d.Post} | **HP:** ${d.HP} | **EXP:** ${d.EXP} | **ATK**: 1d${d.ATK}+${d.ATKP} | **DEF**: 1d${d.DEF}+${d.DEFP} [[Go to Profile](${d.Link})]\n`
+
+                                let cpl = newstr + str[idx]
+                                if (cpl.length <= 1024) str[idx] = cpl
+                                else {
+                                    idx++
+                                    str[idx] = newstr
+                                }
+                            })
+
+                            let list = []
+                            str.forEach(d => {
+                                list.push({
+                                    name: `${ability} Users`,
+                                    value: d
+                                })
+                            })
+
+                            message.channel.send({
+                                embed: {
+                                    color: 3447003,
+                                    author: {
+                                        name: client.user.username,
+                                        icon_url: client.user.avatarURL
+                                    },
+                                    fields: list,
+                                    timestamp: new Date()
+                                }
+                            });
+                        } else return message.reply(`${parent} BELUM PUNYA ANAK AAAAAAH.`);
+                    });
+                }
+
+            } else if (args[0] == '--sort') {
+                if (typeof args[1] == 'undefined') return message.reply('Mau nyari apa oi oi.');
+                else if (args[1].toLowerCase() != "post" && args[1].toLowerCase() != "exp" && args[1].toLowerCase() != "hp" && args[1].toLowerCase() != "atk" && args[1].toLowerCase() != "def") return message.reply(`Tidak bisa sort pakai ${args[1]}`);
+                else {
+                    let sort = args[1].toLowerCase()
+                    let count = 10
+                    let list = []
+                    if (typeof args[2] != 'undefined') count = args[2]
+                    if (count > 20) return message.reply('MAKSIMAL 20 YA!!');
+                    if (sort == "exp" || sort == "hp" || sort == "atk" || sort == "def") {
+
+                        message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+                        var options = {
+                            method: 'GET',
+                            url: `${API}emembers?_sort=${sort.toUpperCase()}:DESC&_limit=${count}`
+                        };
+
+                        request(options, function (error, response, body) {
+                            if (error) throw new Error(error);
+
+                            body = JSON.parse(body)
+
+                            body.forEach((d, i) => {
+                                list.push({
+                                    name: `RANK ${i+1} - ${d.Name} (${d.UserID})`,
+                                    value: `**EXP**: ${d.EXP} - **HP**: ${d.HP} - **ATK**: 1d${d.ATK}+${d.ATKP} - **DEF**: 1d${d.DEF}+${d.DEFP} [[Go to Profile](${d.Link})]`
+                                })
+                            })
+
+                            list.push({
+                                name: `LEBIH DETAIL`,
+                                value: `Untuk melihat data dengan lebih lengkap dan sortir berdasarkan HP, DEF, atau ATK, kunjungi [ini](http://eleftheria-bot.herokuapp.com/stats)`
+                            })
+
+                            message.channel.send({
+                                embed: {
+                                    color: 3447003,
+                                    author: {
+                                        name: client.user.username,
+                                        icon_url: client.user.avatarURL
+                                    },
+                                    title: `Top ${sort.toUpperCase()} Points`,
+                                    url: 'http://eleftheria-bot.herokuapp.com/stats',
+                                    description: `Members dengan ${sort.toUpperCase()} points terbesar.`,
+                                    fields: list,
+                                    timestamp: new Date()
+                                }
+                            });
+                        });
+                    } else if (sort == "post") {
+                        message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
+                        eleftheria.getTopCampers(client, message, count)
+                    }
+                }
+
+            } else {
                 let name = args[0]
                 if (args.length > 1) name = args.join(' ')
                 if (name.length < 3) message.reply('Minimal 3 karakter lah nyarinya :(')
@@ -348,6 +511,24 @@ client.on('message', message => {
 
                 commands = commands.join(", ")
 
+                let rcommands = '**!curse <mention orangnya>** untuk merutuki orang, boleh tag lebih dari satu.\n'
+                rcommands += '**!praise <mention orangnya>**, boleh tag lebih dari satu.\n'
+                rcommands += '**!remind <mention orangnya>** untuk mengingatkan orang, boleh tag lebih dari satu.\n**!tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
+                rcommands += '**!tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
+                rcommands += '**!guide <mention orangnya>** untuk mengarahkan orang, boleh tag lebih dari satu.\n'
+                rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
+                rcommands += '**!ddr 1d5** untuk dice roll'
+
+
+                let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
+                ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
+                ecommands += '**!pvp <userid1> <userid2> <ronde>** simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
+
+                let search = 'Seluruh filter search ini belum bisa digabung dengan satu sama lain ya.\n**!search <nama>** untuk mencari karakter\n'
+                search += '**!search --parent (nama dewa/i atau UNCLAIMED)**, search berdasarkan orang tua.\n'
+                search += '**!search --ability (nama ability)**, search berdasarkan ability.\n'
+                search += '**!search --sort (Post/EXP/HP/ATK/DEF) <limit>**, search berdasarkan jumlah post/EXP/HP points.\n - Untuk post masih dapat menggunakan !top <limit>\n - Untuk EXP masih dapat menggunakan !topexp <limit>'
+
                 message.channel.send({
                     embed: {
                         color: 3447003,
@@ -361,14 +542,17 @@ client.on('message', message => {
                             url: client.user.avatarURL,
                         },
                         fields: [{
-                            name: 'Yang lumayan lah bisa dipakai',
-                            value: '`!curse <mention orangnya>` untuk merutuki orang, boleh tag lebih dari satu.\n`!praise <mention orangnya>`, boleh tag lebih dari satu.\n`!remind <mention orangnya>` untuk mengingatkan orang, boleh tag lebih dari satu.\n`!tagih <mention orangnya>` untuk tagih repp, boleh tag lebih dari satu.\n`!guide <mention orangnya>` untuk mengarahkan orang, boleh tag lebih dari satu.\n`!kangen <nickname di server ini>` untuk bilang kangen via Nicollo.\n`!ddr 1d5` untuk dice roll'
+                            name: 'Commands Interaksi',
+                            value: rcommands
                         }, {
-                            name: 'Yang...umm, cobain aja sendiri',
+                            name: 'Members Search',
+                            value: search
+                        }, {
+                            name: 'Eleftheria',
+                            value: ecommands
+                        }, {
+                            name: 'Cobain sendiri aja ihi',
                             value: commands
-                        }, {
-                            name: 'Berhubungan sama forum, tapi masih percobaan',
-                            value: '`!latest <angka>` untuk melihat latest topics di forum\n`!search <nama>` untuk mencari karakter\n`!detail <userid>` untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n`!pvp <userid1> <userid2> <ronde>` simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n`!top <limit>` untuk melihat top posters overall\n`!toptoday` untuk melihat yang rajin hari ini.\n`!topexp <limit>` untuk melihat members dengan exp tertinggi'
                         }],
                         timestamp: new Date()
                     }
