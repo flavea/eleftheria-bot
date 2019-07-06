@@ -30,7 +30,7 @@ module.exports = {
                     try {
                         latest.name = element.querySelector('td:nth-child(3) > table > tbody > tr > td:nth-child(2) > a').innerText
                         latest.link = element.querySelector('td:nth-child(3) > table > tbody > tr > td:nth-child(2) > a').getAttribute('href')
-                        latest.started_by = element.querySelector('td:nth-child(5) > a').innerText
+                        latest.started_by = element.querySelector('td:nth-child(5)').innerText
                         latest.replied = element.querySelector('td:nth-child(8)').innerText
                     } catch (exception) {
                         console.log(exception)
@@ -47,6 +47,7 @@ module.exports = {
             let list = []
             let flag = 1
             data.forEach(d => {
+                console.log(d)
                 if (flag <= amount) {
                     list.push({
                         name: d.name,
@@ -422,7 +423,7 @@ module.exports = {
                 uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
                 uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
                 uData.DEFResult = 0
-                uData.Heal = 3
+                uData.Heal = 1
             }
             return uData
         })
@@ -441,7 +442,7 @@ module.exports = {
                 uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
                 uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
                 uData.DEFResult = 0
-                uData.Heal = 3
+                uData.Heal = 1
 
             }
             return uData

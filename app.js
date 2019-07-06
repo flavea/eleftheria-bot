@@ -73,7 +73,7 @@ app.post('/get-pvp', async function (req, res) {
             uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
             uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
             uData.DEFResult = 0
-            uData.Heal = 3
+            uData.Heal = 1
         }
         return uData
     })
@@ -95,7 +95,7 @@ app.post('/get-pvp', async function (req, res) {
                 uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
                 uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
                 uData.DEFResult = 0
-                uData.Heal = 3
+                uData.Heal = 1
 
             }
             return uData
