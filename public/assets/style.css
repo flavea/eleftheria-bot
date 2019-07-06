@@ -82,7 +82,7 @@ h4 {
 }
 
 h2 {
-    font-size: 200%;
+    font-size: 180%;
     line-height: 150%;
 }
 
@@ -223,7 +223,7 @@ h2 {
 .user-info {
     margin: 5px 10px;
     flex-grow: 1;
-    font-size: 12px
+    font-size: 14px
 }
 
 .style1 {
@@ -516,7 +516,9 @@ h2 {
 }
 
 @media (max-width:500px) {
-
+    #header {
+        margin-top: 80px
+    }
     body,
     html {
         background: url(https://i.ibb.co/cXgwbJ1/bg.jpg) no-repeat fixed center #151610;

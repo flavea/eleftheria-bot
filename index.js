@@ -7,6 +7,7 @@ const search = require('./search.js')
 const request = require("request")
 const client = new discord.Client()
 const API = process.env.API
+const newMembers = []
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`)
@@ -15,19 +16,19 @@ client.on('ready', () => {
 
 client.on("guildMemberAdd", (member) => {
     const guild = member.guild
-    if (!newUsers[guild.id]) newUsers[guild.id] = new Discord.Collection()
-    newUsers[guild.id].set(member.id, member.user)
+    if (!newMembers[guild.id]) newMembers[guild.id] = new discord.Collection()
+    newMembers[guild.id].set(member.id, member.user)
 
-    if (newUsers[guild.id].size > 1) {
-        const userlist = newUsers[guild.id].map(u => u.toString()).join(" ")
-        guild.channels.find(channel => channel.name === "obrolan").send("Selamat datang " + userlist + " hihihi")
-        newUsers[guild.id].clear()
+    if (newMembers[guild.id].size >= 1) {
+        const userlist = newMembers[guild.id].map(u => u.toString()).join(" ")
+        guild.channels.find(channel => channel.id === process.env.MAIN_CHANNEL_ID).send(`Selamat datang ${userlist} hihihi. Cek <#${process.env.RULE_CHANNEL_ID}> untuk membaca peraturan server dan <#${process.env.GUIDE_CHANNEL_ID}> untuk petunjuk hidup. Jangan lupa juga perkenalkan diri kamu di sini, uwu. *Happy roleplaying*!`)
+        newMembers[guild.id].clear()
     }
 })
 
 client.on("guildMemberRemove", (member) => {
     const guild = member.guild
-    if (newUsers[guild.id].has(member.id)) newUsers.delete(member.id)
+    if (newMembers[guild.id].has(member.id)) newMembers.delete(member.id)
 })
 
 client.on('message', message => {
