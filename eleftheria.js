@@ -6,7 +6,6 @@ const forum = process.env.FORUM
 module.exports = {
     fetchLatestTopics: async function(client, message, amount) {
         const browser = await puppeteer.launch({
-            headless: false,
             'args': [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
