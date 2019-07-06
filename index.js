@@ -190,7 +190,23 @@ client.on('message', message => {
                 body = parseInt(body)
 
                 if (!message.mentions.users.size) {
-                    return message.reply(body[0].quote)
+                    const res = Math.floor(Math.random() * body) + 1
+
+                    options = {
+                        method: 'GET',
+                        url: `${API}reminders`,
+                        qs: {
+                            quote_id: res
+                        }
+                    }
+
+                    request(options, (error, response, body) => {
+                        if (error) throw new Error(error)
+
+                        body = JSON.parse(body)
+
+                        return message.reply(body[0].quote)
+                    })
                 }
 
                 message.mentions.users.forEach(tagged => {
@@ -378,7 +394,6 @@ client.on('message', message => {
                 let rcommands = '**!curse <mention orangnya>** untuk merutuki orang, boleh tag lebih dari satu.\n'
                 rcommands += '**!praise <mention orangnya>**, boleh tag lebih dari satu.\n'
                 rcommands += '**!remind <mention orangnya>** untuk mengingatkan orang, boleh tag lebih dari satu.\n**!tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
-                rcommands += '**!tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
                 rcommands += '**!guide <mention orangnya>** untuk mengarahkan orang, boleh tag lebih dari satu.\n'
                 rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
                 rcommands += '**!ddr 1d5** untuk dice roll'
