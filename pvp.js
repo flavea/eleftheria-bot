@@ -23,7 +23,7 @@ async function pvp(id1, id2, ronde) {
             uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText;
             uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText;
             uData.DEFResult = 0
-            uData.Heal = 3
+            uData.Heal = 1
         }
         return uData
     });
@@ -42,7 +42,7 @@ async function pvp(id1, id2, ronde) {
             uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText;
             uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText;
             uData.DEFResult = 0
-            uData.Heal = 3
+            uData.Heal = 1
 
         }
         return uData
