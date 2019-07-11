@@ -13,30 +13,38 @@ module.exports = {
         })
         const page = await browser.newPage()
         await page.setViewport({ width: 0, height: 0 })
-        await page.goto(forum + 'index.php?act=Login&CODE=00', { waitUntil: 'load', timeout: 3000000 })
-        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME)
-        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD)
-        await page.click('#ipbwrapper > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]')
-        await page.click('#ipbwrapper > form > div > div:nth-child(6) > input')
-        await page.waitForNavigation({ waitUntil: 'load' })
-        await page.goto(forum + 'index.php?act=Search&CODE=getactive', { waitUntil: 'load', timeout: 3000000 })
+        try {
+            await page.goto(forum + 'index.php?act=Login&CODE=00', { waitUntil: 'load', timeout: 3000000 })
+            await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME)
+            await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD)
+            await page.click('#ipbwrapper > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]')
+            await page.click('#ipbwrapper > form > div > div:nth-child(6) > input')
+            await page.waitForNavigation({ waitUntil: 'load' })
+            await page.goto(forum + 'index.php?act=Search&CODE=getactive', { waitUntil: 'load', timeout: 3000000 })
+        } catch (exception) {
+            console.log(exception)
+        }
 
         let data = await page.evaluate(() => {
             let topics = []
-            let elements = document.querySelectorAll('#active-topics > div > table > tbody > tr:not(:first-child)')
-            if (elements.length > 0) {
-                elements.forEach((element) => {
-                    let latest = {}
-                    try {
-                        latest.name = element.querySelector('td:nth-child(3) > table > tbody > tr > td:nth-child(2) > a').innerText
-                        latest.link = element.querySelector('td:nth-child(3) > table > tbody > tr > td:nth-child(2) > a').getAttribute('href')
-                        latest.started_by = element.querySelector('td:nth-child(5)').innerText
-                        latest.replied = element.querySelector('td:nth-child(8)').innerText
-                    } catch (exception) {
-                        console.log(exception)
-                    }
-                    topics.push(latest)
-                })
+            try {
+                let elements = document.querySelectorAll('#active-topics > div > table > tbody > tr:not(:first-child)')
+                if (elements.length > 0) {
+                    elements.forEach((element) => {
+                        let latest = {}
+                        try {
+                            latest.name = element.querySelector('td:nth-child(3) > table > tbody > tr > td:nth-child(2) > a').innerText
+                            latest.link = element.querySelector('td:nth-child(3) > table > tbody > tr > td:nth-child(2) > a').getAttribute('href')
+                            latest.started_by = element.querySelector('td:nth-child(5)').innerText
+                            latest.replied = element.querySelector('td:nth-child(8)').innerText
+                        } catch (exception) {
+                            console.log(exception)
+                        }
+                        topics.push(latest)
+                    })
+                }
+            } catch (exception) {
+                console.log(exception)
             }
             return topics
         })
@@ -86,25 +94,33 @@ module.exports = {
         const page = await browser.newPage()
         await page.setViewport({ width: 0, height: 0 })
 
-        await page.goto(forum + 'index.php?act=Members', { waitUntil: 'load', timeout: 3000000 })
-        await page.type('.memberlist-namesearch', camper)
+        try {
+            await page.goto(forum + 'index.php?act=Members', { waitUntil: 'load', timeout: 3000000 })
+            await page.type('.memberlist-namesearch', camper)
 
-        await Promise.all([
-            page.click('#ipbwrapper > form > div.darkrow1 > center > input'),
-            page.waitForNavigation({ waitUntil: 'load' }),
-        ])
+            await Promise.all([
+                page.click('#ipbwrapper > form > div.darkrow1 > center > input'),
+                page.waitForNavigation({ waitUntil: 'load' }),
+            ])
+        } catch (exception) {
+            console.log(exception)
+        }
 
         let founds = await page.evaluate(() => {
             let foundCampers = []
-            let elements = document.querySelectorAll('.camper')
-            if (elements.length > 0) {
-                elements.forEach((element) => {
-                    try {
-                        foundCampers.push(element.getAttribute('href').trim())
-                    } catch (exception) {
-                        console.log(exception)
-                    }
-                })
+            try {
+                let elements = document.querySelectorAll('.camper')
+                if (elements.length > 0) {
+                    elements.forEach((element) => {
+                        try {
+                            foundCampers.push(element.getAttribute('href').trim())
+                        } catch (exception) {
+                            console.log(exception)
+                        }
+                    })
+                } 
+            } catch (exception) {
+                console.log(exception)
             }
 
             return foundCampers
@@ -285,21 +301,25 @@ module.exports = {
 
         let data = await page.evaluate(() => {
             let foundCampers = []
-            let elements = document.querySelectorAll('.camper')
-            if (elements.length > 0) {
-                elements.forEach((element) => {
-                    try {
-                        foundCampers.push({
-                            id: element.getAttribute('href').trim().replace('/index.php?showuser=', ''),
-                            url: element.getAttribute('href').trim(),
-                            name: element.querySelector('.camper-name > h2').innerText,
-                            title : element.querySelector('div:nth-child(3) > span').innerText,
-                            posts : element.querySelector('div:nth-child(5)').innerText
-                        })
-                    } catch (exception) {
-                        console.log(exception)
-                    }
-                })
+            try {
+                let elements = document.querySelectorAll('.camper')
+                if (elements.length > 0) {
+                    elements.forEach((element) => {
+                        try {
+                            foundCampers.push({
+                                id: element.getAttribute('href').trim().replace('/index.php?showuser=', ''),
+                                url: element.getAttribute('href').trim(),
+                                name: element.querySelector('.camper-name > h2').innerText,
+                                title : element.querySelector('div:nth-child(3) > span').innerText,
+                                posts : element.querySelector('div:nth-child(5)').innerText
+                            })
+                        } catch (exception) {
+                            console.log(exception)
+                        }
+                    })
+                }
+            } catch (exception) {
+                console.log(exception)
             }
 
             return foundCampers
@@ -353,22 +373,26 @@ module.exports = {
 
         let data = await page.evaluate(() => {
             let foundCampers = []
-            let elements = document.querySelectorAll('#ipbwrapper > div:nth-child(2) > table > tbody > tr')
-            let today = document.querySelector('#ipbwrapper > div:nth-child(2) > div.pformstrip').innerText
-            if (elements.length > 0) {
-                elements.forEach((element) => {
-                    try {
-                        foundCampers.push({
-                            url: element.querySelector('td:nth-child(1) > a').getAttribute('href').trim(),
-                            name: element.querySelector('td:nth-child(1) > a').innerText,
-                            posts : element.querySelector('td:nth-child(2)').innerText,
-                            percentage : element.querySelector('td:nth-child(3)').innerText,
-                            today: today.replace('Total posts today: ', '')
-                        })
-                    } catch (exception) {
-                        console.log(exception)
-                    }
-                })
+            try {
+                let elements = document.querySelectorAll('#ipbwrapper > div:nth-child(2) > table > tbody > tr')
+                let today = document.querySelector('#ipbwrapper > div:nth-child(2) > div.pformstrip').innerText
+                if (elements.length > 0) {
+                    elements.forEach((element) => {
+                        try {
+                            foundCampers.push({
+                                url: element.querySelector('td:nth-child(1) > a').getAttribute('href').trim(),
+                                name: element.querySelector('td:nth-child(1) > a').innerText,
+                                posts : element.querySelector('td:nth-child(2)').innerText,
+                                percentage : element.querySelector('td:nth-child(3)').innerText,
+                                today: today.replace('Total posts today: ', '')
+                            })
+                        } catch (exception) {
+                            console.log(exception)
+                        }
+                    })
+                }
+            } catch (exception) {
+                console.log(exception)
             }
 
             return foundCampers
