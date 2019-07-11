@@ -47,12 +47,13 @@ client.on('message', message => {
             method: 'GET',
             url: `${API}reminders/count`
         }
-
         request(options, (error, response, body) => {
             if (error) throw new Error(error)
 
             body = parseInt(body)
-            const res = Math.floor(Math.random() * body) + 1
+            if(isNaN(body)) body = 16
+            let res = 'a'
+            while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
             let options = {
                 method: 'GET',
@@ -65,7 +66,8 @@ client.on('message', message => {
             request(options, (error, response, body) => {
                 if (error) throw new Error(error)
 
-                body = JSON.parse(body)
+                if(!body.startsWith('<')) body = JSON.parse(body)
+                else body = ''
 
                 if (body.length > 0) return message.reply(body[0].quote + ' If you need some help, use `!bantu`')
                 else {
@@ -93,7 +95,8 @@ client.on('message', message => {
                 request(options, (error, response, body) => {
                     if (error) throw new Error(error)
 
-                    body = JSON.parse(body)
+                    if(!body.startsWith('<')) body = JSON.parse(body)
+                    else body = ''
 
                     if (body.length > 0) {
                         body.forEach(v => {
@@ -122,6 +125,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
+                    if(isNaN(body)) body = 16
+                    let res = 'a'
+                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     message.mentions.users.forEach(tagged => {
                         const res = Math.floor(Math.random() * body) + 1
@@ -136,8 +142,9 @@ client.on('message', message => {
 
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
-
-                            body = JSON.parse(body)
+                            
+                            if(!body.startsWith('<')) body = JSON.parse(body)
+                            else body = ''
 
                             if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
                             else {
@@ -164,6 +171,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
+                    if(isNaN(body)) body = 16
+                    let res = 'a'
+                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     message.mentions.users.forEach(tagged => {
                         const res = Math.floor(Math.random() * body) + 1
@@ -179,7 +189,8 @@ client.on('message', message => {
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
 
-                            body = JSON.parse(body)
+                            if(!body.startsWith('<')) body = JSON.parse(body)
+                            else body = ''
 
                             if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
                             else {
@@ -202,6 +213,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
+                    if(isNaN(body)) body = 16
+                    let res = 'a'
+                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     if (!message.mentions.users.size) {
                         const res = Math.floor(Math.random() * body) + 1
@@ -217,7 +231,8 @@ client.on('message', message => {
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
 
-                            body = JSON.parse(body)
+                            if(!body.startsWith('<')) body = JSON.parse(body)
+                            else body = ''
 
                             if (body.length > 0) return message.reply(body[0].quote)
                             else {
@@ -240,8 +255,9 @@ client.on('message', message => {
 
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
-
-                            body = JSON.parse(body)
+    
+                            if(!body.startsWith('<')) body = JSON.parse(body)
+                            else body = ''
 
                             if (body.length > 0) message.channel.send(`<@${tagged.id}> ${body[0].quote}`)
                             else {
@@ -265,8 +281,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
-
-                    const res = Math.floor(Math.random() * body) + 1
+                    if(isNaN(body)) body = 16
+                    let res = 'a'
+                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     options = {
                         method: 'GET',
@@ -279,7 +296,8 @@ client.on('message', message => {
                     request(options, (error, response, body) => {
                         if (error) throw new Error(error)
 
-                        body = JSON.parse(body)
+                        if(!body.startsWith('<')) body = JSON.parse(body)
+                        else body = ''
 
                         if (body.length > 0) return message.reply(body[0].gossip)
                         else {
@@ -470,7 +488,8 @@ client.on('message', message => {
                 request(options, (error, response, body) => {
                     if (error) throw new Error(error)
 
-                    body = JSON.parse(body)
+                    if(!body.startsWith('<')) body = JSON.parse(body)
+                    else body = ''
                     commands = []
 
                     if (body.length > 0) {
