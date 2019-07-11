@@ -47,7 +47,6 @@ module.exports = {
             let list = []
             let flag = 1
             data.forEach(d => {
-                console.log(d)
                 if (flag <= amount) {
                     list.push({
                         name: d.name,

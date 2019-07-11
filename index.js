@@ -42,8 +42,7 @@ client.on('message', message => {
         let ay = ['cuh', 'ayyyy', 'hmmm', 'TAT', 'ihihihihi', 'kya kya']
         const res = Math.floor(Math.random() * ay.length) + 1
         return message.reply(ay[res] + '! If you need some help, use `!bantu`')
-    }
-    else if (!message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
+    } else if (!message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
         options = {
             method: 'GET',
             url: `${API}reminders/count`
@@ -68,7 +67,11 @@ client.on('message', message => {
 
                 body = JSON.parse(body)
 
-                return message.reply(body[0].quote + ' If you need some help, use `!bantu`')
+                if (body.length > 0) return message.reply(body[0].quote + ' If you need some help, use `!bantu`')
+                else {
+                    console.log("Reminder Error: " + res)
+                    return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
+                }
             })
         })
     } else if (!message.content.startsWith('!') || message.author.bot) return
@@ -137,6 +140,10 @@ client.on('message', message => {
                             body = JSON.parse(body)
 
                             if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
+                            else {
+                                console.log("Curse Error: " + res)
+                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
+                            }
                         })
 
                     })
@@ -175,6 +182,10 @@ client.on('message', message => {
                             body = JSON.parse(body)
 
                             if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
+                            else {
+                                console.log("Curse Error: " + res)
+                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
+                            }
                         })
 
                     })
@@ -208,7 +219,11 @@ client.on('message', message => {
 
                             body = JSON.parse(body)
 
-                            return message.reply(body[0].quote)
+                            if (body.length > 0) return message.reply(body[0].quote)
+                            else {
+                                console.log("Reminder Error: " + res)
+                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
+                            }
                         })
                     }
 
@@ -229,15 +244,54 @@ client.on('message', message => {
                             body = JSON.parse(body)
 
                             if (body.length > 0) message.channel.send(`<@${tagged.id}> ${body[0].quote}`)
+                            else {
+                                console.log("Reminder Error: " + res)
+                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
+                            }
                         })
                     })
                 })
 
                 break
 
+            case '!gosip':
+
+                options = {
+                    method: 'GET',
+                    url: `${API}egossips/count`
+                }
+
+                request(options, (error, response, body) => {
+                    if (error) throw new Error(error)
+
+                    body = parseInt(body)
+
+                    const res = Math.floor(Math.random() * body) + 1
+
+                    options = {
+                        method: 'GET',
+                        url: `${API}egossips`,
+                        qs: {
+                            gossip_id: res
+                        }
+                    }
+
+                    request(options, (error, response, body) => {
+                        if (error) throw new Error(error)
+
+                        body = JSON.parse(body)
+
+                        if (body.length > 0) return message.reply(body[0].gossip)
+                        else {
+                            console.log("Gosip Error: " + res)
+                            return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
+                        }
+                    })
+                })
+
+                break
             case '!topexp':
                 let count = 10
-                let list = []
                 if (typeof args[0] != 'undefined') count = args[0]
                 if (count > 25) return message.reply('MAKSIMAL 25 YA!!')
 
@@ -319,6 +373,8 @@ client.on('message', message => {
                 else if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return message.reply('Harus angka oi ID-nya.')
                 else if (message.content.trim() == '!pvp 286 286') return message.reply('Maaf, pvp Nicollo vs Nicollo tanpa limit ronde diban, lelah lihatnya.')
                 else if (message.content.trim() == '!pvp 189 189') return message.reply('Maaf, pvp Dorcas vs Dorcas juga  diban kalau tanpa limit ronde, *please have mercy*.')
+                else if (message.content.trim() == '!pvp 228 228') return message.reply('Maaf, pvp Lorcan vs Lorvan juga  diban kalau tanpa limit ronde, *please have mercy*.')
+                else if (message.content.trim() == '!pvp 286 189' || message.content.trim() == '!pvp 189 286' || message.content.trim() == '!pvp 189 228' || message.content.trim() == '!pvp 228 189' || message.content.trim() == '!pvp 286 228' || message.content.trim() == '!pvp 228 286') return message.reply('PvP ini diban. *please have mercy*.')
                 else {
                     let ronde = ''
                     if (typeof args[2] != 'undefined' && !isNaN(parseInt(args[2]))) ronde = parseInt(args[2])
@@ -374,6 +430,29 @@ client.on('message', message => {
                     message.channel.send(`${mentioned}, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian.`)
                 }
                 break
+            case '!pukpuk':
+                return message.reply('Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
+                break
+
+            case '!hempas':
+                if (typeof args[0] == 'undefined' && !message.mentions.users.size) return message.reply('Maaf, aku unhempasable.')
+                else if (typeof args[0] != 'undefined' && !message.mentions.users.size) {
+                    name = args.join(' ')
+                    let user = message.guild.members.find(user => user.nickname == name)
+                    if (user == null) user = message.guild.members.find(user => user.username == name)
+
+                    if (user != null) {
+                        if (message.author.id == user.id) return message.reply('Wah kamu maso ya hempas diri sendiri.')
+                        else message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${user.id}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
+                    } else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
+                } else if (message.mentions.users.size) {
+                    message.mentions.users.forEach(tagged => {
+                        mentioned += `<@${tagged.id}>, `
+                    })
+
+                    message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${mentioned}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
+                }
+                break
             case '!bantu':
                 options = {
                     method: 'GET',
@@ -392,6 +471,8 @@ client.on('message', message => {
                         })
                     }
 
+                    commands.push('!pukpuk')
+                    commands.push('!gossip')
                     commands = commands.join(", ")
 
                     let rcommands = '**!curse <mention orangnya>** untuk merutuki orang, boleh tag lebih dari satu.\n'
@@ -405,6 +486,7 @@ client.on('message', message => {
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
                     ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
                     ecommands += '**!pvp <userid1> <userid2> <ronde>** simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
+                    ecommands += '**!toptoday** untuk melihat member terajin hari ini.\n'
 
                     let search = '**!search --parent (nama dewa/i atau UNCLAIMED)**, search berdasarkan orang tua.\n'
                     search += '**!search --ability (nama ability)**, search berdasarkan ability.\n'
