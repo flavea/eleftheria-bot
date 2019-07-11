@@ -431,7 +431,15 @@ client.on('message', message => {
                 }
                 break
             case '!pukpuk':
-                return message.reply('Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
+                if (!message.mentions.users.size) {
+                    return message.reply('Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
+                }
+
+                message.mentions.users.forEach(tagged => {
+                    mentioned += `<@${tagged.id}>`
+                })
+
+                message.channel.send(mentioned + ' Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
                 break
 
             case '!hempas':
@@ -471,21 +479,21 @@ client.on('message', message => {
                         })
                     }
 
-                    commands.push('!pukpuk')
-                    commands.push('!gossip')
+                    commands.push('!gosip')
                     commands = commands.join(", ")
 
                     let rcommands = '**!curse <mention orangnya>** untuk merutuki orang, boleh tag lebih dari satu.\n'
                     rcommands += '**!praise <mention orangnya>**, boleh tag lebih dari satu.\n'
                     rcommands += '**!remind <mention orangnya>** untuk mengingatkan orang, boleh tag lebih dari satu.\n**!tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
                     rcommands += '**!guide <mention orangnya>** untuk mengarahkan orang, boleh tag lebih dari satu.\n'
+                    rcommands += '**!pukpuk <mention orangnya>** untuk ngepukpuk.\n'
                     rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
                     rcommands += '**!ddr 1d5** untuk dice roll'
 
 
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
                     ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
-                    ecommands += '**!pvp <userid1> <userid2> <ronde>** simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.'
+                    ecommands += '**!pvp <userid1> <userid2> <ronde>** simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n'
                     ecommands += '**!toptoday** untuk melihat member terajin hari ini.\n'
 
                     let search = '**!search --parent (nama dewa/i atau UNCLAIMED)**, search berdasarkan orang tua.\n'
