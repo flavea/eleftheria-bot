@@ -51,9 +51,9 @@ client.on('message', message => {
             if (error) throw new Error(error)
 
             body = parseInt(body)
-            if(isNaN(body)) body = 16
+            if (isNaN(body)) body = 16
             let res = 'a'
-            while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
+            while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
             let options = {
                 method: 'GET',
@@ -66,7 +66,7 @@ client.on('message', message => {
             request(options, (error, response, body) => {
                 if (error) throw new Error(error)
 
-                if(!body.startsWith('<')) body = JSON.parse(body)
+                if (!body.startsWith('<')) body = JSON.parse(body)
                 else body = ''
 
                 if (body.length > 0) return message.reply(body[0].quote + ' If you need some help, use `!bantu`')
@@ -95,7 +95,7 @@ client.on('message', message => {
                 request(options, (error, response, body) => {
                     if (error) throw new Error(error)
 
-                    if(!body.startsWith('<')) body = JSON.parse(body)
+                    if (!body.startsWith('<')) body = JSON.parse(body)
                     else body = ''
 
                     if (body.length > 0) {
@@ -125,9 +125,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
-                    if(isNaN(body)) body = 16
+                    if (isNaN(body)) body = 16
                     let res = 'a'
-                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
+                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     message.mentions.users.forEach(tagged => {
                         const res = Math.floor(Math.random() * body) + 1
@@ -142,8 +142,8 @@ client.on('message', message => {
 
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
-                            
-                            if(!body.startsWith('<')) body = JSON.parse(body)
+
+                            if (!body.startsWith('<')) body = JSON.parse(body)
                             else body = ''
 
                             if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
@@ -171,9 +171,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
-                    if(isNaN(body)) body = 16
+                    if (isNaN(body)) body = 16
                     let res = 'a'
-                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
+                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     message.mentions.users.forEach(tagged => {
                         const res = Math.floor(Math.random() * body) + 1
@@ -189,7 +189,7 @@ client.on('message', message => {
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
 
-                            if(!body.startsWith('<')) body = JSON.parse(body)
+                            if (!body.startsWith('<')) body = JSON.parse(body)
                             else body = ''
 
                             if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
@@ -213,9 +213,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
-                    if(isNaN(body)) body = 16
+                    if (isNaN(body)) body = 16
                     let res = 'a'
-                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
+                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     if (!message.mentions.users.size) {
                         const res = Math.floor(Math.random() * body) + 1
@@ -231,7 +231,7 @@ client.on('message', message => {
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
 
-                            if(!body.startsWith('<')) body = JSON.parse(body)
+                            if (!body.startsWith('<')) body = JSON.parse(body)
                             else body = ''
 
                             if (body.length > 0) return message.reply(body[0].quote)
@@ -255,8 +255,8 @@ client.on('message', message => {
 
                         request(options, (error, response, body) => {
                             if (error) throw new Error(error)
-    
-                            if(!body.startsWith('<')) body = JSON.parse(body)
+
+                            if (!body.startsWith('<')) body = JSON.parse(body)
                             else body = ''
 
                             if (body.length > 0) message.channel.send(`<@${tagged.id}> ${body[0].quote}`)
@@ -281,9 +281,9 @@ client.on('message', message => {
                     if (error) throw new Error(error)
 
                     body = parseInt(body)
-                    if(isNaN(body)) body = 16
+                    if (isNaN(body)) body = 16
                     let res = 'a'
-                    while(isNaN(res)) res = Math.floor(Math.random() * body) + 1
+                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
 
                     options = {
                         method: 'GET',
@@ -296,7 +296,7 @@ client.on('message', message => {
                     request(options, (error, response, body) => {
                         if (error) throw new Error(error)
 
-                        if(!body.startsWith('<')) body = JSON.parse(body)
+                        if (!body.startsWith('<')) body = JSON.parse(body)
                         else body = ''
 
                         if (body.length > 0) return message.reply(body[0].gossip)
@@ -356,24 +356,9 @@ client.on('message', message => {
                         eleftheria.searchCampers(client, message, name)
                     }
                 } else {
-                    var arguments = []
-                    var queries = []
-
-                    args.forEach((arg, idx) => {
-                        if (arg.startsWith("--")) {
-                            let new_idx = idx + 1
-                            let params = []
-                            if (typeof args[new_idx] == 'undefined' || args[new_idx].startsWith("--")) return message.reply('Salah satu filter pencarian tak memiliki parameter.')
-                            else {
-                                while (typeof args[new_idx] != 'undefined' && !args[new_idx].startsWith("--")) {
-                                    params.push(args[new_idx])
-                                    new_idx++
-                                }
-                            }
-                            arguments.push(arg.toLowerCase())
-                            queries.push(params.join(' '))
-                        }
-                    })
+                    var pars = tools.paramBuilder(message, client, args)
+                    var arguments = pars[0]
+                    var queries = pars[1]
 
                     search.buildParams(message, client, arguments, queries)
                 }
@@ -479,6 +464,207 @@ client.on('message', message => {
                     message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${mentioned}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
                 }
                 break
+            case '!howto':
+                options = {
+                    method: 'GET',
+                    url: 'https://hargrimm-wikihow-v1.p.rapidapi.com/steps',
+                    qs: {
+                        count: '5'
+                    },
+                    headers: {
+                        'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
+                        'X-RapidAPI-Host': 'hargrimm-wikihow-v1.p.rapidapi.com'
+                    }
+                };
+
+                request(options, (error, response, body) => {
+                    if (error) throw new Error(error);
+
+                    body = JSON.parse(body)
+                    body = Object.keys(body).map((key) => {
+                        return [body[key]];
+                    });
+
+                    if (body.length > 0) {
+                        let string = ''
+                        body.forEach((v, i) => {
+                            string += `${i+1}. ${v}\n`
+                        })
+
+                        message.channel.send(string)
+
+                    }
+                });
+
+                break
+            case '!define':
+
+                if (typeof args[0] == 'undefined') return message.reply('Jangan lupa apa yang mau didefinisikan, kk.')
+                else {
+                    options = {
+                        method: 'GET',
+                        url: 'https://mashape-community-urban-dictionary.p.rapidapi.com/define',
+                        qs: {
+                            term: args[0]
+                        },
+                        headers: {
+                            'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
+                            'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com'
+                        }
+                    };
+
+                    request(options, (error, response, body) => {
+                        if (error) throw new Error(error);
+
+                        body = JSON.parse(body)
+                        let list = []
+                        if (typeof body.list != 'undefined') {
+                            if (body.list.length > 0) {
+                                message.channel.send(`**${args[0]}**`)
+                                body.list.forEach((d, i) => {
+                                    if (i <= 4) {
+                                        message.channel.send(`${i+1}. ${d.definition}\n`)
+                                    }
+                                })
+                            } else {
+                                message.reply("Maaf, definisi tidak ditemukan.")
+                            }
+                        } else {
+                            message.reply("Maaf, definisi tidak ditemukan.")
+                        }
+                    });
+
+                }
+
+                break
+
+            case '!love':
+                if (typeof args[0] == 'undefined') return message.reply('Mau hitung siapa?')
+                else {
+                    var pars = tools.paramBuilder(message, client, args)
+                    var arguments = pars[0]
+                    var queries = pars[1]
+
+                    let fname = sname = ''
+                    arguments.forEach((arg, idx) => {
+                        if (arg == '--first') {
+                            fname = queries[idx]
+                        } else if (arg == '--second') {
+                            sname = queries[idx]
+                        }
+                    })
+
+                    if (fname == '' || sname == '') message.reply("Salah satu parameter salah")
+                    else {
+                        options = {
+                            method: 'GET',
+                            url: 'https://love-calculator.p.rapidapi.com/getPercentage',
+                            qs: {
+                                fname: fname,
+                                sname: sname
+                            },
+                            headers: {
+                                'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
+                                'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com'
+                            }
+                        };
+
+                        request(options, (error, response, body) => {
+                            if (error) throw new Error(error);
+
+                            body = JSON.parse(body)
+                            console.log(body)
+                            if (typeof body.message != 'undefined') message.reply('duh ada error, coba lagi deh')
+                            else message.reply(`**${fname}/${sname}**: ${body.percentage}% jodoh. ${body.result}`)
+                        });
+
+                    }
+                }
+                break
+
+            case '!convert':
+                if (typeof args[0] == 'undefined') return message.reply('Mau convert siapa?')
+                else {
+                    var pars = tools.paramBuilder(message, client, args)
+                    var arguments = pars[0]
+                    var queries = pars[1]
+
+                    let from = to = ''
+                    let amount = 1
+                    arguments.forEach((arg, idx) => {
+                        if (arg == '--from') {
+                            from = queries[idx].toUpperCase()
+                        } else if (arg == '--to') {
+                            to = queries[idx].toUpperCase()
+                        } else if (arg == '--amount') {
+                            amount = parseInt(queries[idx])
+                        }
+                    })
+
+                    if (isNaN(amount)) amount = 1
+
+                    if (from == '' || to == '') message.reply("Salah satu parameter salah")
+                    else {
+                        options = {
+                            method: 'GET',
+                            url: 'https://fixer-fixer-currency-v1.p.rapidapi.com/convert',
+                            qs: {
+                                from: from,
+                                to: to,
+                                amount: amount
+                            },
+                            headers: {
+                                'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
+                                'X-RapidAPI-Host': 'fixer-fixer-currency-v1.p.rapidapi.co'
+                            }
+                        };
+
+                        request(options, (error, response, body) => {
+                            if (error) throw new Error(error);
+
+                            body = JSON.parse(body)
+                            if (typeof body.message != 'undefined') message.reply('duh ada error, coba lagi deh')
+                            else message.reply(`${from} ${amount} = ${to} ${body.result}`)
+                        });
+
+                    }
+                }
+                break
+
+            case '!generate':
+
+                let from = 'united states'
+                if (args.length > 0) {
+                    
+                    var pars = tools.paramBuilder(message, client, args)
+                    var arguments = pars[0]
+                    var queries = pars[1]
+
+                    arguments.forEach((arg, idx) => {
+                        if (arg == '--from') {
+                            from = queries[idx].toUpperCase()
+                        }
+                    })
+                }
+
+                options = {
+                    method: 'GET',
+                    url: 'https://uinames.com/api/',
+                    qs: {
+                        ext: '',
+                        region: from
+                    }
+                };
+
+                request(options, (error, response, body) => {
+                    if (error) throw new Error(error);
+
+                    body = JSON.parse(body)
+                    if (typeof body.error != 'undefined') message.reply(body.error)
+                    else message.reply(`**${body.name + ' ' + body.surname}** - ${body.gender} - Birthday ${body.birthday.dmy.substring(0, 5)}`)
+                });
+                break
+
             case '!bantu':
                 options = {
                     method: 'GET',
@@ -488,7 +674,7 @@ client.on('message', message => {
                 request(options, (error, response, body) => {
                     if (error) throw new Error(error)
 
-                    if(!body.startsWith('<')) body = JSON.parse(body)
+                    if (!body.startsWith('<')) body = JSON.parse(body)
                     else body = ''
                     commands = []
 
@@ -498,7 +684,7 @@ client.on('message', message => {
                         })
                     }
 
-                    commands.push('!gosip')
+                    commands.push('!gosip, !howto')
                     commands = commands.join(", ")
 
                     let rcommands = '**!curse <mention orangnya>** untuk merutuki orang, boleh tag lebih dari satu.\n'
@@ -507,8 +693,12 @@ client.on('message', message => {
                     rcommands += '**!guide <mention orangnya>** untuk mengarahkan orang, boleh tag lebih dari satu.\n'
                     rcommands += '**!pukpuk <mention orangnya>** untuk ngepukpuk.\n'
                     rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
-                    rcommands += '**!ddr 1d5** untuk dice roll'
-
+                    rcommands += '**!hempas <nickname di server ini>** untuk menghempas via Nicollo.\n'
+                    rcommands += '**!ddr 1d5** untuk dice roll\n'
+                    rcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
+                    rcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
+                    rcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini\n'
+                    rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. paramter --from bersifat opsional, default united states.'
 
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
                     ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
@@ -547,6 +737,35 @@ client.on('message', message => {
                             timestamp: new Date()
                         }
                     })
+                })
+                break
+
+            case '!new':
+
+                let rcommands = '**!howto** tutorial random\n'
+                rcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
+                rcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
+                rcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini.\n'
+                rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. paramter --from bersifat opsional, default united states.'
+
+                message.channel.send({
+                    embed: {
+                        color: 3447003,
+                        author: {
+                            name: client.user.username,
+                            icon_url: client.user.avatarURL
+                        },
+                        title: 'Eleftheria Bot Update',
+                        description: 'What is new?',
+                        thumbnail: {
+                            url: client.user.avatarURL,
+                        },
+                        fields: [{
+                            name: 'July 22nd 2019',
+                            value: rcommands
+                        }],
+                        timestamp: new Date()
+                    }
                 })
                 break
         }

@@ -76,5 +76,27 @@ module.exports = {
 
         return final.join(' ')
 
+    },
+    paramBuilder: function (message, client, args) {
+        var arguments = []
+        var queries = []
+
+        args.forEach((arg, idx) => {
+            if (arg.startsWith("--")) {
+                let new_idx = idx + 1
+                let params = []
+                if (typeof args[new_idx] == 'undefined' || args[new_idx].startsWith("--")) return message.reply('Salah satu filter pencarian tak memiliki parameter.')
+                else {
+                    while (typeof args[new_idx] != 'undefined' && !args[new_idx].startsWith("--")) {
+                        params.push(args[new_idx])
+                        new_idx++
+                    }
+                }
+                arguments.push(arg.toLowerCase())
+                queries.push(params.join(' '))
+            }
+        })
+
+        return [arguments, queries]
     }
 }
