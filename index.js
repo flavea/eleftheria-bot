@@ -11,7 +11,7 @@ const newMembers = []
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`)
-    client.user.setActivity("with the curves of your body")
+    client.user.setActivity("!bantu & !new")
 })
 
 client.on("guildMemberAdd", (member) => {
@@ -635,7 +635,7 @@ client.on('message', message => {
 
                 let from = 'united states'
                 if (args.length > 0) {
-                    
+
                     var pars = tools.paramBuilder(message, client, args)
                     var arguments = pars[0]
                     var queries = pars[1]
@@ -663,6 +663,17 @@ client.on('message', message => {
                     if (typeof body.error != 'undefined') message.reply(body.error)
                     else message.reply(`**${body.name + ' ' + body.surname}** - ${body.gender} - Birthday ${body.birthday.dmy.substring(0, 5)}`)
                 });
+                break
+
+            case '!fmk':
+                if (typeof args[0] == 'undefined') return message.reply('Mau FMK siapa?')
+                else {
+                    message.channel.send(args.join(' ')).then(sentEmbed => {
+                        sentEmbed.react("🇫")
+                        sentEmbed.react("🇲")
+                        sentEmbed.react("🇰")
+                    })
+                }
                 break
 
             case '!bantu':
@@ -698,7 +709,8 @@ client.on('message', message => {
                     rcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
                     rcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
                     rcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini\n'
-                    rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. paramter --from bersifat opsional, default united states.'
+                    rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter --from bersifat opsional, default united states.\n'
+                    rcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
 
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
                     ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
@@ -746,7 +758,8 @@ client.on('message', message => {
                 rcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
                 rcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
                 rcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini.\n'
-                rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. paramter --from bersifat opsional, default united states.'
+                rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter --from bersifat opsional, default united states.\n'
+                rcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
 
                 message.channel.send({
                     embed: {
