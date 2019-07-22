@@ -705,12 +705,13 @@ client.on('message', message => {
                     rcommands += '**!pukpuk <mention orangnya>** untuk ngepukpuk.\n'
                     rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
                     rcommands += '**!hempas <nickname di server ini>** untuk menghempas via Nicollo.\n'
-                    rcommands += '**!ddr 1d5** untuk dice roll\n'
-                    rcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
-                    rcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
-                    rcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini\n'
-                    rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter --from bersifat opsional, default united states.\n'
-                    rcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
+
+                    let tcommands = '**!ddr 1d5** untuk dice roll\n'
+                    tcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
+                    tcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
+                    tcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini\n'
+                    tcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter --from bersifat opsional, default united states.\n'
+                    tcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
 
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
                     ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
@@ -729,6 +730,40 @@ client.on('message', message => {
                                 icon_url: client.user.avatarURL
                             },
                             title: 'Eleftheria Bot Helper',
+                            description: 'Commands untuk pakai bot.',
+                            thumbnail: {
+                                url: client.user.avatarURL,
+                            },
+                            fields: [{
+                                name: 'Commands Interaksi',
+                                value: rcommands
+                            }, {
+                                name: 'Tools Commands',
+                                value: tcommands
+                            }, {
+                                name: 'Members Search',
+                                value: search
+                            }, {
+                                name: 'Eleftheria',
+                                value: ecommands
+                            }, {
+                                name: 'Cobain sendiri aja ihi',
+                                value: commands
+                            }],
+                            timestamp: new Date()
+                        }
+
+                    })
+
+
+                    message.channel.send({
+                        embed: {
+                            color: 3447003,
+                            author: {
+                                name: client.user.username,
+                                icon_url: client.user.avatarURL
+                            },
+                            title: 'Eleftheria Bot Helper Part 2',
                             description: 'Commands untuk pakai bot.',
                             thumbnail: {
                                 url: client.user.avatarURL,
