@@ -713,36 +713,6 @@ client.on('message', message => {
                         }
 
                     })
-
-
-                    message.channel.send({
-                        embed: {
-                            color: 3447003,
-                            author: {
-                                name: client.user.username,
-                                icon_url: client.user.avatarURL
-                            },
-                            title: 'Eleftheria Bot Helper Part 2',
-                            description: 'Commands untuk pakai bot.',
-                            thumbnail: {
-                                url: client.user.avatarURL,
-                            },
-                            fields: [{
-                                name: 'Commands Interaksi',
-                                value: rcommands
-                            }, {
-                                name: 'Members Search',
-                                value: search
-                            }, {
-                                name: 'Eleftheria',
-                                value: ecommands
-                            }, {
-                                name: 'Cobain sendiri aja ihi',
-                                value: commands
-                            }],
-                            timestamp: new Date()
-                        }
-                    })
                 })
                 break
 
