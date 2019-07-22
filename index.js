@@ -313,7 +313,7 @@ client.on('message', message => {
                 if (typeof args[0] != 'undefined') count = args[0]
                 if (count > 25) return message.reply('MAKSIMAL 25 YA!!')
 
-                search.buildParams(message, client, ['--sort'], ['exp'])
+                search.buildParams(message, client, ['-sort'], ['exp'])
 
                 break
             case '!ddr':
@@ -347,7 +347,7 @@ client.on('message', message => {
                 break
             case '!search':
                 if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.')
-                if (!args[0].startsWith('--')) {
+                if (!args[0].startsWith('-')) {
                     let name = args[0]
                     if (args.length > 1) name = args.join(' ')
                     if (name.length < 3) message.reply('Minimal 3 karakter lah nyarinya :(')
@@ -497,47 +497,6 @@ client.on('message', message => {
                 });
 
                 break
-            case '!define':
-
-                if (typeof args[0] == 'undefined') return message.reply('Jangan lupa apa yang mau didefinisikan, kk.')
-                else {
-                    options = {
-                        method: 'GET',
-                        url: 'https://mashape-community-urban-dictionary.p.rapidapi.com/define',
-                        qs: {
-                            term: args[0]
-                        },
-                        headers: {
-                            'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
-                            'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com'
-                        }
-                    };
-
-                    request(options, (error, response, body) => {
-                        if (error) throw new Error(error);
-
-                        body = JSON.parse(body)
-                        let list = []
-                        if (typeof body.list != 'undefined') {
-                            if (body.list.length > 0) {
-                                message.channel.send(`**${args[0]}**`)
-                                body.list.forEach((d, i) => {
-                                    if (i <= 4) {
-                                        message.channel.send(`${i+1}. ${d.definition}\n`)
-                                    }
-                                })
-                            } else {
-                                message.reply("Maaf, definisi tidak ditemukan.")
-                            }
-                        } else {
-                            message.reply("Maaf, definisi tidak ditemukan.")
-                        }
-                    });
-
-                }
-
-                break
-
             case '!love':
                 if (typeof args[0] == 'undefined') return message.reply('Mau hitung siapa?')
                 else {
@@ -547,9 +506,9 @@ client.on('message', message => {
 
                     let fname = sname = ''
                     arguments.forEach((arg, idx) => {
-                        if (arg == '--first') {
+                        if (arg == '-first') {
                             fname = queries[idx]
-                        } else if (arg == '--second') {
+                        } else if (arg == '-second') {
                             sname = queries[idx]
                         }
                     })
@@ -592,11 +551,11 @@ client.on('message', message => {
                     let from = to = ''
                     let amount = 1
                     arguments.forEach((arg, idx) => {
-                        if (arg == '--from') {
+                        if (arg == '-from') {
                             from = queries[idx].toUpperCase()
-                        } else if (arg == '--to') {
+                        } else if (arg == '-to') {
                             to = queries[idx].toUpperCase()
-                        } else if (arg == '--amount') {
+                        } else if (arg == '-amount') {
                             amount = parseInt(queries[idx])
                         }
                     })
@@ -641,7 +600,7 @@ client.on('message', message => {
                     var queries = pars[1]
 
                     arguments.forEach((arg, idx) => {
-                        if (arg == '--from') {
+                        if (arg == '-from') {
                             from = queries[idx].toUpperCase()
                         }
                     })
@@ -707,10 +666,10 @@ client.on('message', message => {
                     rcommands += '**!hempas <nickname di server ini>** untuk menghempas via Nicollo.\n'
 
                     let tcommands = '**!ddr 1d5** untuk dice roll\n'
-                    tcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
+                    tcommands += '**!love -first (nama 1) -second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
                     tcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
-                    tcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini\n'
-                    tcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter --from bersifat opsional, default united states.\n'
+                    tcommands += '**!convert -from (kode negara) -to (kode negara) -amount (angka)** konversi mata uang hari ini\n'
+                    tcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
                     tcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
 
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
@@ -718,9 +677,9 @@ client.on('message', message => {
                     ecommands += '**!pvp <userid1> <userid2> <ronde>** simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n'
                     ecommands += '**!toptoday** untuk melihat member terajin hari ini.\n'
 
-                    let search = '**!search --parent (nama dewa/i atau UNCLAIMED)**, search berdasarkan orang tua.\n'
-                    search += '**!search --ability (nama ability)**, search berdasarkan ability.\n'
-                    search += '**!search --sort (Post/EXP/HP/ATK/DEF)**, search berdasarkan jumlah post/EXP/HP points.\n - Untuk post masih dapat menggunakan !top <limit>\n - Untuk EXP masih dapat menggunakan !topexp <limit>'
+                    let search = '**!search -parent (nama dewa/i atau UNCLAIMED)**, search berdasarkan orang tua.\n'
+                    search += '**!search -ability (nama ability)**, search berdasarkan ability.\n'
+                    search += '**!search -sort (Post/EXP/HP/ATK/DEF)**, search berdasarkan jumlah post/EXP/HP points.\n - Untuk post masih dapat menggunakan !top <limit>\n - Untuk EXP masih dapat menggunakan !topexp <limit>'
 
                     message.channel.send({
                         embed: {
@@ -789,11 +748,11 @@ client.on('message', message => {
 
             case '!new':
 
-                let rcommands = '**!howto** tutorial random\n'
-                rcommands += '**!love --first (nama 1) --second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
-                rcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
-                rcommands += '**!convert --from (kode negara) --to (kode negara) --amount (angka)** konversi mata uang hari ini.\n'
-                rcommands += '**!generate --from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter --from bersifat opsional, default united states.\n'
+                let rcommands = 'Update: untuk parameter diganti dari -- menjadi - saja.\n'
+                rcommands += '**!howto** tutorial random\n'
+                rcommands += '**!love -first (nama 1) -second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
+                rcommands += '**!convert -from (kode negara) -to (kode negara) -amount (angka)** konversi mata uang hari ini.\n'
+                rcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
                 rcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
 
                 message.channel.send({

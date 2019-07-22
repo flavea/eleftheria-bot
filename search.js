@@ -7,7 +7,7 @@ const API = process.env.API
 
 module.exports = {
     buildParams: function (message, client, arguments, queries) {
-        if (arguments.length == 1 && arguments[0] == "--sort" && queries[0].toUpperCase() == "POST") {
+        if (arguments.length == 1 && arguments[0] == "-sort" && queries[0].toUpperCase() == "POST") {
             message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
             eleftheria.getTopCampers(client, message, count)
         }
@@ -17,15 +17,15 @@ module.exports = {
             arguments.forEach((arg, idx) => {
                 if (idx == 0) query += '?'
                 else query += '&'
-                if (arg == '--parent') {
+                if (arg == '-parent') {
                     let q = queries[idx].toUpperCase()
                     title.push(`CHILDREN OF ${q}`)
                     query += `Title_contains=${q}`
-                } else if (arg == '--ability') {
+                } else if (arg == '-ability') {
                     let q = tools.titleCase(queries[idx])
                     title.push(`THOSE WHO HAVE ${q}`)
                     query += `Ability_contains=${q}`
-                } else if (arg == '--sort') {
+                } else if (arg == '-sort') {
                     let q = queries[idx].toUpperCase()
 
                     title.push(`SORTED BY ${q}`)
