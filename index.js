@@ -80,7 +80,6 @@ client.on('message', message => {
     else {
         const args = message.content.split(/ +/)
         const command = args.shift().toLowerCase()
-        let mentioned = ''
 
         switch (command) {
             default:
@@ -310,19 +309,19 @@ client.on('message', message => {
                 break
             case '!topexp':
                 let count = 10
-                if (typeof args[0] != 'undefined') count = args[0]
+                if (args.length > 0) count = args[0]
                 if (count > 25) return message.reply('MAKSIMAL 25 YA!!')
 
                 search.buildParams(message, client, ['-sort'], ['exp'])
 
                 break
             case '!ddr':
-                if (typeof args[0] == 'undefined') return message.reply('Mana parameternyaa')
+                if (args.length == 0) return message.reply('Mana parameternyaa')
                 else tools.rollMessage(message, args[0])
                 break
             case '!latest':
                 let amount = 10
-                if (typeof args[0] == 'undefined') amount = 10
+                if (args.length == 0) amount = 10
                 else if (isNaN(parseInt(args[0]))) return message.reply('Parameter harus angka oi.')
                 else amount = parseInt(args[0])
 
@@ -331,7 +330,7 @@ client.on('message', message => {
                 break
             case '!top':
                 let limit = 10
-                if (typeof args[0] == 'undefined') limit = 10
+                if (args.length == 0) limit = 10
                 else if (isNaN(parseInt(args[0]))) return message.reply('Parameter harus angka oi.')
                 else limit = parseInt(args[0])
 
@@ -346,7 +345,7 @@ client.on('message', message => {
                 eleftheria.getTopToday(client, message)
                 break
             case '!search':
-                if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.')
+                if (args.length == 0) return message.reply('Mau nyari siapa oi oi.')
                 if (!args[0].startsWith('-')) {
                     let name = args[0]
                     if (args.length > 1) name = args.join(' ')
@@ -364,7 +363,7 @@ client.on('message', message => {
                 }
                 break
             case '!detail':
-                if (typeof args[0] == 'undefined') return message.reply('Mau nyari siapa oi oi.')
+                if (args.length == 0) return message.reply('Mau nyari siapa oi oi.')
                 else if (isNaN(parseInt(args[0]))) return message.reply('Harus angka oi.')
                 else {
                     message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
@@ -372,7 +371,7 @@ client.on('message', message => {
                 }
                 break
             case '!pvp':
-                if (typeof args[0] == 'undefined' || typeof args[1] == 'undefined') return message.reply('Harus ada dua id user oi.')
+                if (args.length == 0 || typeof args[1] == 'undefined') return message.reply('Harus ada dua id user oi.')
                 else if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return message.reply('Harus angka oi ID-nya.')
                 else if (message.content.trim() == '!pvp 286 286') return message.reply('Maaf, pvp Nicollo vs Nicollo tanpa limit ronde diban, lelah lihatnya.')
                 else if (message.content.trim() == '!pvp 189 189') return message.reply('Maaf, pvp Dorcas vs Dorcas juga  diban kalau tanpa limit ronde, *please have mercy*.')
@@ -392,11 +391,7 @@ client.on('message', message => {
                         files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"]
                     })
                 } else {
-                    message.mentions.users.forEach(tagged => {
-                        mentioned += `<@${tagged.id}> `
-                    })
-
-                    message.channel.send(mentioned, {
+                    message.channel.send(args.join(', '), {
                         files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"]
                     })
                 }
@@ -406,17 +401,13 @@ client.on('message', message => {
                     return message.reply('Tag orang dulu.')
                 }
 
-                message.mentions.users.forEach(tagged => {
-                    mentioned += `<@${tagged.id}> `
-                })
-
-                message.channel.send(mentioned, {
+                message.channel.send(args.join(', '), {
                     files: ["https://cdn.discordapp.com/attachments/572834275456450561/592226480713367553/IMG_20190422_153330.jpg"]
                 })
                 break
             case '!kangen':
-                if (typeof args[0] == 'undefined' && !message.mentions.users.size) return message.reply('Makasih, tapi aku gak kangen kamu.')
-                else if (typeof args[0] != 'undefined' && !message.mentions.users.size) {
+                if (args.length == 0 && !message.mentions.users.size) return message.reply('Makasih, tapi aku gak kangen kamu.')
+                else if (args.length > 0 && !message.mentions.users.size) {
                     name = args.join(' ')
                     let user = message.guild.members.find(user => user.nickname == name)
                     if (user == null) user = message.guild.members.find(user => user.username == name)
@@ -426,11 +417,7 @@ client.on('message', message => {
                         else message.channel.send(`<@${user.id}>, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian. `)
                     } else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
                 } else if (message.mentions.users.size) {
-                    message.mentions.users.forEach(tagged => {
-                        mentioned += `<@${tagged.id}> `
-                    })
-
-                    message.channel.send(`${mentioned}, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian.`)
+                    message.channel.send(`${args.join(', ')}, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian.`)
                 }
                 break
             case '!pukpuk':
@@ -438,16 +425,12 @@ client.on('message', message => {
                     return message.reply('Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
                 }
 
-                message.mentions.users.forEach(tagged => {
-                    mentioned += `<@${tagged.id}>`
-                })
-
-                message.channel.send(mentioned + ' Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
+                message.channel.send(args.join(', ') + ' Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
                 break
 
             case '!hempas':
-                if (typeof args[0] == 'undefined' && !message.mentions.users.size) return message.reply('Maaf, aku unhempasable.')
-                else if (typeof args[0] != 'undefined' && !message.mentions.users.size) {
+                if (args.length == 0 && !message.mentions.users.size) return message.reply('Maaf, aku unhempasable.')
+                else if (args.length > 0 && !message.mentions.users.size) {
                     name = args.join(' ')
                     let user = message.guild.members.find(user => user.nickname == name)
                     if (user == null) user = message.guild.members.find(user => user.username == name)
@@ -457,11 +440,8 @@ client.on('message', message => {
                         else message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${user.id}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
                     } else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
                 } else if (message.mentions.users.size) {
-                    message.mentions.users.forEach(tagged => {
-                        mentioned += `<@${tagged.id}>, `
-                    })
 
-                    message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${mentioned}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
+                    message.channel.send(`Dan <@${message.author.id}> pun berkata pada ${args.join(', ')}, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
                 }
                 break
             case '!howto':
@@ -498,7 +478,7 @@ client.on('message', message => {
 
                 break
             case '!love':
-                if (typeof args[0] == 'undefined') return message.reply('Mau hitung siapa?')
+                if (args.length == 0) return message.reply('Mau hitung siapa?')
                 else {
                     var pars = tools.paramBuilder(message, client, args)
                     var arguments = pars[0]
@@ -542,7 +522,7 @@ client.on('message', message => {
                 break
 
             case '!convert':
-                if (typeof args[0] == 'undefined') return message.reply('Mau convert siapa?')
+                if (args.length == 0) return message.reply('Mau convert siapa?')
                 else {
                     var pars = tools.paramBuilder(message, client, args)
                     var arguments = pars[0]
@@ -625,12 +605,46 @@ client.on('message', message => {
                 break
 
             case '!fmk':
-                if (typeof args[0] == 'undefined') return message.reply('Mau FMK siapa?')
+                if (args.length == 0) return message.reply('Mau FMK siapa?')
                 else {
                     message.channel.send(args.join(' ')).then(sentEmbed => {
                         sentEmbed.react("🇫")
                         sentEmbed.react("🇲")
                         sentEmbed.react("🇰")
+                    })
+                }
+                break
+
+            case '!fmk2':
+                if (args.length != 3) return message.reply('Masukan 3 nama.')
+                else {
+                    for (let i = args.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [args[i], args[j]] = [args[j], args[i]];
+                    }
+
+                    let string = `I will F: ${args[0]}, M: ${args[1]}, K: ${args[2]}\n`
+                    message.channel.send(string)
+                }
+                break
+
+            case '!fmk3':
+                if (args.length != 3) return message.reply('Masukan 3 nama.')
+                else {
+
+                    let string = `A. F: ${args[0]}, M: ${args[1]}, K: ${args[2]}\n`
+                    string += `B. F: ${args[0]}, M: ${args[2]}, K: ${args[1]}\n`
+                    string += `C. F: ${args[1]}, M: ${args[0]}, K: ${args[2]}\n`
+                    string += `D. F: ${args[1]}, M: ${args[2]}, K: ${args[0]}\n`
+                    string += `E. F: ${args[2]}, M: ${args[0]}, K: ${args[1]}\n`
+                    string += `F. F: ${args[2]}, M: ${args[1]}, K: ${args[0]}\n`
+                    message.channel.send(string).then(sentEmbed => {
+                        sentEmbed.react("🇦")
+                        sentEmbed.react("🇧")
+                        sentEmbed.react("🇨")
+                        sentEmbed.react("🇩")
+                        sentEmbed.react("🇪")
+                        sentEmbed.react("🇫")
                     })
                 }
                 break
@@ -667,10 +681,11 @@ client.on('message', message => {
 
                     let tcommands = '**!ddr 1d5** untuk dice roll\n'
                     tcommands += '**!love -first (nama 1) -second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
-                    tcommands += '**!define (sesuatu)** sama kayak define punya mas yagpd, tapi gak kehapus\n'
                     tcommands += '**!convert -from (kode negara) -to (kode negara) -amount (angka)** konversi mata uang hari ini\n'
                     tcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
-                    tcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
+                    tcommands += '**!fmk (nama)** vote fuck, marry, kill untuk satu nama.\n'
+                    tcommands += '**!fmk2 (nama1) (nama2) (nama3)** f, m, k pilihan Nicollo.\n'
+                    tcommands += '**!fmk3 (nama1) (nama2) (nama3)** f, m, k pilihan masyarakat (alias pakai vote).'
 
                     let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
                     ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
@@ -725,6 +740,10 @@ client.on('message', message => {
                 rcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
                 rcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
 
+
+                let tcommands = '**!fmk2 (nama1) (nama2) (nama3)** f, m, k pilihan Nicollo.\n'
+                tcommands += '**!fmk3 (nama1) (nama2) (nama3)** f, m, k pilihan masyarakat (alias pakai vote).'
+
                 message.channel.send({
                     embed: {
                         color: 3447003,
@@ -738,6 +757,9 @@ client.on('message', message => {
                             url: client.user.avatarURL,
                         },
                         fields: [{
+                            name: 'July 23rd 2019',
+                            value: tcommands
+                        }, {
                             name: 'July 22nd 2019',
                             value: rcommands
                         }],
