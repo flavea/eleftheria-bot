@@ -21,7 +21,9 @@ client.on("guildMemberAdd", (member) => {
 
     if (newMembers[guild.id].size >= 1) {
         const userlist = newMembers[guild.id].map(u => u.toString()).join(" ")
-        guild.channels.find(channel => channel.id === process.env.MAIN_CHANNEL_ID).send(`Selamat datang ${userlist} hihihi. Cek <#${process.env.RULE_CHANNEL_ID}> untuk membaca peraturan server dan <#${process.env.GUIDE_CHANNEL_ID}> untuk petunjuk hidup. Jangan lupa juga perkenalkan diri kamu di sini, uwu. *Happy roleplaying*!`)
+        guild.channels.find(channel => channel.id === process.env.MAIN_CHANNEL_ID).send(`Selamat datang ${userlist} hihihi. Cek <#${process.env.RULE_CHANNEL_ID}> untuk membaca peraturan server dan <#${process.env.GUIDE_CHANNEL_ID}> untuk petunjuk hidup. Jangan lupa juga perkenalkan diri kamu di sini, uwu. *Happy roleplaying*! Sambutan dari admin:`, {
+            files: ['https://cdn.discordapp.com/attachments/488307706655014967/623519993438535699/welcome.png']
+        })
         newMembers[guild.id].clear()
     }
 })
