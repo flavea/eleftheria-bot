@@ -6,13 +6,21 @@ $(document).ready(function () {
         else {
             $("#content").hide()
             $("#loading").show()
-            $.post("/submit-gossip", {
-                gossip: $("#gossip").val()
-            },
-            function (data, status) {
-                $("#content").show()
-                $("#loading").hide()
-                alert("Gosip sudah masuk ke kantong!")
+            var settings = {
+                "url": "http://rp.prosa.id/egossips/count",
+                "method": "GET",
+            }
+
+            $.ajax(settings).done(function (response) {
+                $.post("/submit-gossip", {
+                    gossip_id: parseInt(response) + 1,
+                    gossip: $("#gossip").val()
+                },
+                function (data, status) {
+                    $("#content").show()
+                    $("#loading").hide()
+                    alert("Gosip sudah masuk ke kantong!")
+                });
             });
         }
     })

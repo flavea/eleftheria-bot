@@ -54,6 +54,7 @@ app.post('/submit-gossip', function (req, res) {
             'Content-Type': 'application/json'
         },
         body: {
+            gossip_id: req.body.gossip_id,
             gossip: req.body.gossip
         },
         json: true
