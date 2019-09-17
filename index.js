@@ -38,7 +38,19 @@ client.on('message', message => {
     message.mentions.users.forEach(tagged => {
         if (client.user.id == tagged.id) found = true
     })
-    if (message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
+    if(message.content.toLowerCase().startsWith('nicollo, play') || message.content.toLowerCase().startsWith('nicollo play')) {
+        let song = message.content.toLowerCase().replace('nicollo', '').replace('play', '').replace(',', '')
+        const YouTube = require('simple-youtube-api');
+        const youtube = new YouTube(process.env.YOUTUBE_API); 
+
+        youtube.searchVideos(song, 1)
+            .then(results => {
+                if(results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
+                else message.channel.send('Maaf, gak nemu nih ><')
+            })
+            .catch(console.log);
+    }
+    else if (message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
         let ay = ['cuh', 'ayyyy', 'hmmm', 'TAT', 'ihihihihi', 'kya kya']
         const res = Math.floor(Math.random() * ay.length) + 1
         return message.reply(ay[res] + '! If you need some help, use `!bantu`')
@@ -444,132 +456,6 @@ client.on('message', message => {
                     message.channel.send(`Dan <@${message.author.id}> pun berkata pada ${args.join(', ')}, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
                 }
                 break
-            case '!howto':
-                options = {
-                    method: 'GET',
-                    url: 'https://hargrimm-wikihow-v1.p.rapidapi.com/steps',
-                    qs: {
-                        count: '5'
-                    },
-                    headers: {
-                        'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
-                        'X-RapidAPI-Host': 'hargrimm-wikihow-v1.p.rapidapi.com'
-                    }
-                };
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error);
-
-                    body = JSON.parse(body)
-                    body = Object.keys(body).map((key) => {
-                        return [body[key]];
-                    });
-
-                    if (body.length > 0) {
-                        let string = ''
-                        body.forEach((v, i) => {
-                            string += `${i+1}. ${v}\n`
-                        })
-
-                        message.channel.send(string)
-
-                    }
-                });
-
-                break
-            case '!love':
-                if (args.length == 0) return message.reply('Mau hitung siapa?')
-                else {
-                    var pars = tools.paramBuilder(message, client, args)
-                    var arguments = pars[0]
-                    var queries = pars[1]
-
-                    let fname = sname = ''
-                    arguments.forEach((arg, idx) => {
-                        if (arg == '-first') {
-                            fname = queries[idx]
-                        } else if (arg == '-second') {
-                            sname = queries[idx]
-                        }
-                    })
-
-                    if (fname == '' || sname == '') message.reply("Salah satu parameter salah")
-                    else {
-                        options = {
-                            method: 'GET',
-                            url: 'https://love-calculator.p.rapidapi.com/getPercentage',
-                            qs: {
-                                fname: fname,
-                                sname: sname
-                            },
-                            headers: {
-                                'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
-                                'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com'
-                            }
-                        };
-
-                        request(options, (error, response, body) => {
-                            if (error) throw new Error(error);
-
-                            body = JSON.parse(body)
-                            console.log(body)
-                            if (typeof body.message != 'undefined') message.reply('duh ada error, coba lagi deh')
-                            else message.reply(`**${fname}/${sname}**: ${body.percentage}% jodoh. ${body.result}`)
-                        });
-
-                    }
-                }
-                break
-
-            case '!convert':
-                if (args.length == 0) return message.reply('Mau convert siapa?')
-                else {
-                    var pars = tools.paramBuilder(message, client, args)
-                    var arguments = pars[0]
-                    var queries = pars[1]
-
-                    let from = to = ''
-                    let amount = 1
-                    arguments.forEach((arg, idx) => {
-                        if (arg == '-from') {
-                            from = queries[idx].toUpperCase()
-                        } else if (arg == '-to') {
-                            to = queries[idx].toUpperCase()
-                        } else if (arg == '-amount') {
-                            amount = parseInt(queries[idx])
-                        }
-                    })
-
-                    if (isNaN(amount)) amount = 1
-
-                    if (from == '' || to == '') message.reply("Salah satu parameter salah")
-                    else {
-                        options = {
-                            method: 'GET',
-                            url: 'https://fixer-fixer-currency-v1.p.rapidapi.com/convert',
-                            qs: {
-                                from: from,
-                                to: to,
-                                amount: amount
-                            },
-                            headers: {
-                                'X-RapidAPI-Key': 'c9ed88a6d7msh2bb16885ae42db6p18398djsn14a875b76406',
-                                'X-RapidAPI-Host': 'fixer-fixer-currency-v1.p.rapidapi.co'
-                            }
-                        };
-
-                        request(options, (error, response, body) => {
-                            if (error) throw new Error(error);
-
-                            body = JSON.parse(body)
-                            if (typeof body.message != 'undefined') message.reply('duh ada error, coba lagi deh')
-                            else message.reply(`${from} ${amount} = ${to} ${body.result}`)
-                        });
-
-                    }
-                }
-                break
-
             case '!generate':
 
                 let from = 'united states'
@@ -649,6 +535,22 @@ client.on('message', message => {
                 }
                 break
 
+
+            case '!play':
+                if (args.length < 1) return message.reply('Apa yang dicari? :(')
+                else {
+                    let q = args.join(' ')
+                    const YouTube = require('simple-youtube-api');
+                    const youtube = new YouTube(process.env.YOUTUBE_API); 
+
+                    youtube.searchVideos(q, 1)
+                        .then(results => {
+                            message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
+                        })
+                        .catch(console.log);
+                }
+                break
+
             case '!bantu':
                 options = {
                     method: 'GET',
@@ -680,8 +582,6 @@ client.on('message', message => {
                     rcommands += '**!hempas <nickname di server ini>** untuk menghempas via Nicollo.\n'
 
                     let tcommands = '**!ddr 1d5** untuk dice roll\n'
-                    tcommands += '**!love -first (nama 1) -second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
-                    tcommands += '**!convert -from (kode negara) -to (kode negara) -amount (angka)** konversi mata uang hari ini\n'
                     tcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
                     tcommands += '**!fmk (nama)** vote fuck, marry, kill untuk satu nama.\n'
                     tcommands += '**!fmk2 (nama1) (nama2) (nama3)** f, m, k pilihan Nicollo.\n'
@@ -733,16 +633,11 @@ client.on('message', message => {
 
             case '!new':
 
-                let rcommands = 'Update: untuk parameter diganti dari -- menjadi - saja.\n'
-                rcommands += '**!howto** tutorial random\n'
-                rcommands += '**!love -first (nama 1) -second (nama 2)** untuk menghitung tingkat kejodohan. Kadang error, coba lagi aja terus.\n'
-                rcommands += '**!convert -from (kode negara) -to (kode negara) -amount (angka)** konversi mata uang hari ini.\n'
-                rcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
-                rcommands += '**!fmk (nama)** vote fuck, marry, kill.\n'
-
-
-                let tcommands = '**!fmk2 (nama1) (nama2) (nama3)** f, m, k pilihan Nicollo.\n'
-                tcommands += '**!fmk3 (nama1) (nama2) (nama3)** f, m, k pilihan masyarakat (alias pakai vote).'
+                let rcommands = '**Deleted commands:** !howto, !love, !convert\n'
+                rcommands += '**New Commands:**\n'
+                rcommands += '- **Nicollo, play (lagu)** tahulah ya buat apa. Untuk lebih singkat, bisa pakai `!play (apagitu)`\n'
+                rcommands += '**Database:**\n'
+                rcommands += 'Untuk database karakter sekarang bisa diakses lewat http://eleftheria.prosa.id. Untuk submit gosip bisa lewat http://eleftheria.prosa.id/submit'
 
                 message.channel.send({
                     embed: {
@@ -757,10 +652,7 @@ client.on('message', message => {
                             url: client.user.avatarURL,
                         },
                         fields: [{
-                            name: 'July 23rd 2019',
-                            value: tcommands
-                        }, {
-                            name: 'July 22nd 2019',
+                            name: 'September 17th 2019',
                             value: rcommands
                         }],
                         timestamp: new Date()

@@ -565,3 +565,15 @@ thead tr {
 .dataTables_filter {
     padding: 20px;
 }
+
+input {
+    background: transparent; padding: 10px;
+    border: 1px solid #d81010;
+    color: #fff;
+}
+
+input[type="submit"], input [type="reset"] {
+    background: #d81010;
+    color: #fff;
+    margin: 5px 0px;
+}

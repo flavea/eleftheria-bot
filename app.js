@@ -25,6 +25,10 @@ app.get('/pvp', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/pvp.html'))
 })
 
+app.get('/submit', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/submit.html'))
+})
+
 app.get('/get-stats', function (req, res) {
     var options = {
         method: 'GET',
@@ -40,6 +44,26 @@ app.get('/get-stats', function (req, res) {
         res.send(body)
 
     })
+})
+
+app.post('/submit-gossip', function (req, res) {
+    var options = {
+        method: 'POST',
+        url: API + '/egossips',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: {
+            gossip: req.body.gossip
+        },
+        json: true
+    };
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+
+        res.send(response)
+    });
 })
 
 app.post('/get-pvp', async function (req, res) {
