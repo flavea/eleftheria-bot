@@ -580,6 +580,7 @@ client.on('message', message => {
                     rcommands += '**!pukpuk <mention orangnya>** untuk ngepukpuk.\n'
                     rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
                     rcommands += '**!hempas <nickname di server ini>** untuk menghempas via Nicollo.\n'
+                    rcommands += '**!play <lagu> atau Nicollo, play <lagu>**.\n'
 
                     let tcommands = '**!ddr 1d5** untuk dice roll\n'
                     tcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
