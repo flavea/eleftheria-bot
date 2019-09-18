@@ -40,19 +40,51 @@ client.on('message', message => {
     message.mentions.users.forEach(tagged => {
         if (client.user.id == tagged.id) found = true
     })
-    if(message.content.toLowerCase().startsWith('nicollo, play') || message.content.toLowerCase().startsWith('nicollo play')) {
-        let song = message.content.toLowerCase().replace('nicollo', '').replace('play', '').replace(',', '')
+    if (message.content.toLowerCase().startsWith('nicollo, play') || message.content.toLowerCase().startsWith('nicollo play') || message.content.toLowerCase().startsWith('!play')) {
+        let song = message.content.toLowerCase().replace('nicollo', '').replace('play', '').replace(',', '').replace('!', '')
         const YouTube = require('simple-youtube-api');
-        const youtube = new YouTube(process.env.YOUTUBE_API); 
+        let attempt = 0
+        let apis = [process.env.YOUTUBE_API, process.env.YOUTUBE_API_2, process.env.YOUTUBE_API_3, process.env.YOUTUBE_API_4]
 
+        let youtube = new YouTube(apis[0]);
         youtube.searchVideos(song, 1)
             .then(results => {
-                if(results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
+                if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
                 else message.channel.send('Maaf, gak nemu nih ><')
+                found = true
             })
-            .catch(console.log);
-    }
-    else if (message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
+            .catch(err => {
+                let youtube = new YouTube(apis[1]);
+                youtube.searchVideos(song, 1)
+                    .then(results => {
+                        if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
+                        else message.channel.send('Maaf, gak nemu nih ><')
+                        found = true
+                    })
+                    .catch(err => {
+                        let youtube = new YouTube(apis[2]);
+                        youtube.searchVideos(song, 1)
+                            .then(results => {
+                                if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
+                                else message.channel.send('Maaf, gak nemu nih ><')
+                                found = true
+                            })
+                            .catch(err => {
+                                let youtube = new YouTube(apis[3]);
+                                youtube.searchVideos(song, 1)
+                                    .then(results => {
+                                        if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
+                                        else message.channel.send('Maaf, gak nemu nih ><')
+                                        found = true
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                        message.channel.send('Maaf, kuota pencarian habis :( Nicollo masih budak kuota gratis :(')
+                                    });
+                            });
+                    });
+            });
+    } else if (message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
         let ay = ['cuh', 'ayyyy', 'hmmm', 'TAT', 'ihihihihi', 'kya kya']
         const res = Math.floor(Math.random() * ay.length) + 1
         return message.reply(ay[res] + '! If you need some help, use `!bantu`')
@@ -534,22 +566,6 @@ client.on('message', message => {
                         sentEmbed.react("🇪")
                         sentEmbed.react("🇫")
                     })
-                }
-                break
-
-
-            case '!play':
-                if (args.length < 1) return message.reply('Apa yang dicari? :(')
-                else {
-                    let q = args.join(' ')
-                    const YouTube = require('simple-youtube-api');
-                    const youtube = new YouTube(process.env.YOUTUBE_API); 
-
-                    youtube.searchVideos(q, 1)
-                        .then(results => {
-                            message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
-                        })
-                        .catch(console.log);
                 }
                 break
 
