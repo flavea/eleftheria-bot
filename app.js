@@ -32,7 +32,7 @@ app.get('/submit', function (req, res) {
 app.get('/get-stats', function (req, res) {
     var options = {
         method: 'GET',
-        url: API + 'emembers?_sort=EXP:DESC',
+        url: API + 'emembers?_sort=EXP:DESC&_limit=1000',
         headers: {
             'cache-control': 'no-cache'
         }
