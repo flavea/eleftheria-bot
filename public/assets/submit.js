@@ -1,13 +1,13 @@
 $(document).ready(function () {
 
     $('#submit').click(e => {
-        
+
         if($("#gossip").val().trim() === '') alert("Isi dulu oi")
         else {
             $("#content").hide()
             $("#loading").show()
             var settings = {
-                "url": "http://rp.prosa.id/egossips/count",
+                "url": "https://rp.prosa.id/egossips/count",
                 "method": "GET",
             }
 
