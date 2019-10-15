@@ -1,5 +1,5 @@
 require('dotenv').config()
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer')
 const tools = require('./tools.js')
 const forum = process.env.FORUM
 
@@ -9,53 +9,53 @@ async function pvp(id1, id2, ronde) {
             '--no-sandbox',
             '--disable-setuid-sandbox'
         ]
-    });
-    const page = await browser.newPage();
+    })
+    const page = await browser.newPage()
     await page.setViewport({ width: 0, height: 0 })
-    await page.goto(forum + '/index.php?showuser=' + id1, { waitUntil: 'load', timeout: 3000000 });
+    await page.goto(forum + 'index.php?showuser=' + id1, { waitUntil: 'load', timeout: 3000000 })
 
     let userData1 = await page.evaluate(() => {
         let uData = {}
         if (document.querySelector('#profile-header > h1') != null) {
-            uData.name = document.querySelector('#profile-header > h1').innerText;
-            uData.InitialHP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2;
-            uData.HP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2;
-            uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText;
-            uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText;
+            uData.name = document.querySelector('#profile-header > h1').innerText
+            uData.InitialHP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2
+            uData.HP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2
+            uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
+            uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
             uData.DEFResult = 0
             uData.Heal = 1
         }
         return uData
-    });
+    })
 
-    if (typeof userData1.name == "undefined") console.log(`User ${id1} ghaib, gak ketemu!`);
-    else if (userData1.HP == null) console.log(`User ${userData1.name} belum punya battle points, jadi belum bisa berantem, uwu`);
+    if (typeof userData1.name == "undefined") console.log(`User ${id1} ghaib, gak ketemu!`)
+    else if (userData1.HP == null) console.log(`User ${userData1.name} belum punya battle points, jadi belum bisa berantem, uwu`)
 
-    await page.goto(forum + '/index.php?showuser=' + id2, { waitUntil: 'load', timeout: 3000000 });
+    await page.goto(forum + 'index.php?showuser=' + id2, { waitUntil: 'load', timeout: 3000000 })
 
     let userData2 = await page.evaluate(() => {
         let uData = {}
         if (document.querySelector('#profile-header > h1') != null) {
-            uData.name = document.querySelector('#profile-header > h1').innerText;
-            uData.InitialHP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2;
-            uData.HP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2;
-            uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText;
-            uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText;
+            uData.name = document.querySelector('#profile-header > h1').innerText
+            uData.InitialHP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2
+            uData.HP = parseInt(document.querySelector('#battle-points > div:nth-child(6) > span').innerText) * 2
+            uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
+            uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
             uData.DEFResult = 0
             uData.Heal = 1
 
         }
         return uData
-    });
+    })
 
-    if (typeof userData2.name == "undefined") console.log(`User ${id2} ghaib, gak ketemu!`);
-    else if (userData2.HP == null) console.log(`User ${userData2.name} belum punya battle points, jadi belum bisa berantem, uwu`);
+    if (typeof userData2.name == "undefined") console.log(`User ${id2} ghaib, gak ketemu!`)
+    else if (userData2.HP == null) console.log(`User ${userData2.name} belum punya battle points, jadi belum bisa berantem, uwu`)
 
     if (id1 == id2) userData2.name = "KLON " + userData1.name
 
     browser.close()
 
-    console.log(`${userData1.name} vs ${userData2.name}\nBattle dimulai!`);
+    console.log(`${userData1.name} vs ${userData2.name}\nBattle dimulai!`)
 
     let id = 1
     let param = true
@@ -131,14 +131,7 @@ async function pvp(id1, id2, ronde) {
             }
         }
 
-        /* 
-                    if (!isNaN(parseInt(ronde)) && id >= parseInt(ronde)) {
-                        if (userData1.HP > userData2.HP) string += `Pertarungan sudah berlangsung terlalu lama, maka dari itu ${userData1.name}(HP: ${userData1.HP}) menang atas ${userData2.name} (HP: ${userData2.HP})!\n`
-                        else string += `Pertarungan sudah berlangsung terlalu lama, maka dari itu ${userData2.name} (HP: ${userData2.HP}) menang atas ${userData1.name}(HP: ${userData1.HP})!\n`
-                    }
-         */
-        console.log(msg);
-        /* console.log(message) */
+        console.log(msg)
 
         if (ronde != '') param = (userData1.HP > 0 && userData1.Heal >= 0) && (userData2.HP > 0 && userData2.Heal >= 0) && id < parseInt(ronde)
         else param = (userData1.HP > 0 && userData1.Heal >= 0) && (userData2.HP > 0 && userData2.Heal >= 0)
@@ -146,7 +139,7 @@ async function pvp(id1, id2, ronde) {
         id++
 
     }
-
 }
 
-pvp(189, 286, '')
+var args = process.argv.slice(2)
+pvp(args[0], args[1], '')

@@ -13,7 +13,7 @@ async function fetch() {
     })
     const page = await browser.newPage()
 
-    let url = forum + '/index.php?&act=Members&photoonly=&name=&name_box=all&max_results=50&filter=ALL&sort_order=desc&sort_key=posts&st='
+    let url = forum + 'index.php?&act=Members&photoonly=&name=&name_box=all&max_results=50&filter=ALL&sort_order=desc&sort_key=posts&st='
     let start = 0
     await page.setViewport({
         width: 0,
@@ -86,7 +86,7 @@ async function fetch() {
         })
 
         d.link = links[f].trim()
-        d.id = parseInt(links[f].replace('/index.php?showuser=', ''))
+        d.id = parseInt(links[f].replace('index.php?showuser=', ''))
 
         if (typeof d.name != 'undefined') {
 

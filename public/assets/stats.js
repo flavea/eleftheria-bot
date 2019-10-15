@@ -2,13 +2,13 @@ $(document).ready(function () {
 
     function titleCase(str) {
 
-        str = str.toLowerCase().split(' ');
+        str = str.toLowerCase().split(' ')
         let exceptions = ['of', 'and', 'or']
 
-        let final = [];
+        let final = []
 
         for (let word of str) {
-            if (!exceptions.includes(word)) final.push(word.charAt(0).toUpperCase() + word.slice(1));
+            if (!exceptions.includes(word)) final.push(word.charAt(0).toUpperCase() + word.slice(1))
             else final.push(word)
         }
 
@@ -34,7 +34,7 @@ $(document).ready(function () {
             let Weapon = e.Weapon.split(' - ')
             if (Weapon.length == 1) Weapon = e.Weapon.split(', ')
             if (Weapon.length == 1) Weapon = e.Weapon.split('—')
-            if (Weapon.length == 1) Weapon = e.Weapon.split(';')
+            if (Weapon.length == 1) Weapon = e.Weapon.split('')
             if (Weapon.length == 1) Weapon = e.Weapon.split(':')
 
 
@@ -51,8 +51,8 @@ $(document).ready(function () {
             $('.iATKBase', ch).html(e.ATKP)
             $('.iDEFPoint', ch).html(e.DEF)
             $('.iDEFBase', ch).html(e.DEFP)
-            $('.camps tbody').append(ch);
-        });
+            $('.camps tbody').append(ch)
+        })
 
         let t = $('.camps').DataTable({
             "columnDefs": [{
@@ -72,11 +72,11 @@ $(document).ready(function () {
                 search: 'applied',
                 order: 'applied'
             }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
+                cell.innerHTML = i + 1
+            })
 
-        }).draw();
+        }).draw()
         $("#content").show()
         $("#loading").hide()
-    });
-});
+    })
+})

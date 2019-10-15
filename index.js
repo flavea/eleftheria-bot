@@ -1,17 +1,33 @@
 require('dotenv').config()
 
+const fs = require('fs')
 const discord = require('discord.js')
-const eleftheria = require('./eleftheria.js')
-const tools = require('./tools.js')
-const search = require('./search.js')
 const request = require("request")
-const client = new discord.Client()
 const API = process.env.API
 const newMembers = []
 
-client.on('ready', () => {
+const Client = require('./client.js')
+const client = new Client()
+client.commands = new discord.Collection()
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`)
+	client.commands.set(command.name, command)
+}
+
+client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`)
     client.user.setActivity("!bantu & !new")
+})
+
+client.once('reconnecting', () => {
+	console.log('Reconnecting!')
+})
+
+client.once('disconnect', () => {
+	console.log('Disconnect!')
 })
 
 client.on("guildMemberAdd", (member) => {
@@ -35,61 +51,27 @@ client.on("guildMemberRemove", (member) => {
 
 client.on('message', message => {
     let found = false
-    let options = {}
+    let command = ''
 
     message.mentions.users.forEach(tagged => {
         if (client.user.id == tagged.id) found = true
     })
-    if (message.content.toLowerCase().startsWith('nicollo, play') || message.content.toLowerCase().startsWith('nicollo play') || message.content.toLowerCase().startsWith('!play')) {
-        let song = message.content.toLowerCase().replace('nicollo', '').replace('play', '').replace(',', '').replace('!', '')
-        const YouTube = require('simple-youtube-api');
-        let attempt = 0
-        let apis = [process.env.YOUTUBE_API, process.env.YOUTUBE_API_2, process.env.YOUTUBE_API_3, process.env.YOUTUBE_API_4]
 
-        let youtube = new YouTube(apis[0]);
-        youtube.searchVideos(song, 1)
-            .then(results => {
-                if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
-                else message.channel.send('Maaf, gak nemu nih ><')
-                found = true
-            })
-            .catch(err => {
-                let youtube = new YouTube(apis[1]);
-                youtube.searchVideos(song, 1)
-                    .then(results => {
-                        if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
-                        else message.channel.send('Maaf, gak nemu nih ><')
-                        found = true
-                    })
-                    .catch(err => {
-                        let youtube = new YouTube(apis[2]);
-                        youtube.searchVideos(song, 1)
-                            .then(results => {
-                                if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
-                                else message.channel.send('Maaf, gak nemu nih ><')
-                                found = true
-                            })
-                            .catch(err => {
-                                let youtube = new YouTube(apis[3]);
-                                youtube.searchVideos(song, 1)
-                                    .then(results => {
-                                        if (results.length > 0) message.channel.send(`${results[0].title} https://www.youtube.com/watch?v=${results[0].id}`)
-                                        else message.channel.send('Maaf, gak nemu nih ><')
-                                        found = true
-                                    })
-                                    .catch(err => {
-                                        console.log(err)
-                                        message.channel.send('Maaf, kuota pencarian habis :( Nicollo masih budak kuota gratis :(')
-                                    });
-                            });
-                    });
-            });
+    if (message.content.toLowerCase().startsWith('nicollo, play') || message.content.toLowerCase().startsWith('nicollo play')) {
+        command = 'play'
+        let commandExec = client.commands.get(command)
+        try {
+            commandExec.execute(message, client)
+        } catch (error) {
+            console.error(error)
+            message.reply('There was an error trying to execute that command!')
+        }
     } else if (message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
         let ay = ['cuh', 'ayyyy', 'hmmm', 'TAT', 'ihihihihi', 'kya kya']
         const res = Math.floor(Math.random() * ay.length) + 1
         return message.reply(ay[res] + '! If you need some help, use `!bantu`')
     } else if (!message.content.startsWith('!') && (message.isMentioned(client.user) || found) && !message.author.bot) {
-        options = {
+        let options = {
             method: 'GET',
             url: `${API}reminders/count`
         }
@@ -124,453 +106,16 @@ client.on('message', message => {
         })
     } else if (!message.content.startsWith('!') || message.author.bot) return
     else {
-        const args = message.content.split(/ +/)
-        const command = args.shift().toLowerCase()
-
-        switch (command) {
-            default:
-                options = {
-                    method: 'GET',
-                    url: `${API}commands`,
-                    qs: {
-                        command: command
-                    }
-                }
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error)
-
-                    if (!body.startsWith('<')) body = JSON.parse(body)
-                    else body = ''
-
-                    if (body.length > 0) {
-                        body.forEach(v => {
-                            if (v.attachment != '') {
-                                message.channel.send(v.message == '' ? '' : v.message, {
-                                    files: [v.attachment == null ? '' : v.attachment]
-                                })
-                            } else if (v.message != null) {
-                                message.channel.send(v.message)
-                            }
-                        })
-                    }
-                })
-                break
-            case '!curse':
-                if (!message.mentions.users.size) {
-                    return message.reply('Tag dulu orangnya woy.')
-                }
-
-                options = {
-                    method: 'GET',
-                    url: `${API}curses/count`
-                }
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error)
-
-                    body = parseInt(body)
-                    if (isNaN(body)) body = 16
-                    let res = 'a'
-                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
-
-                    message.mentions.users.forEach(tagged => {
-                        const res = Math.floor(Math.random() * body) + 1
-
-                        options = {
-                            method: 'GET',
-                            url: `${API}curses`,
-                            qs: {
-                                curse_id: res
-                            }
-                        }
-
-                        request(options, (error, response, body) => {
-                            if (error) throw new Error(error)
-
-                            if (!body.startsWith('<')) body = JSON.parse(body)
-                            else body = ''
-
-                            if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
-                            else {
-                                console.log("Curse Error: " + res)
-                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
-                            }
-                        })
-
-                    })
-                })
-
-                break
-            case '!praise':
-                if (!message.mentions.users.size) {
-                    return message.reply('Tag dulu orangnya woy.')
-                }
-
-                options = {
-                    method: 'GET',
-                    url: `${API}curses/count`
-                }
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error)
-
-                    body = parseInt(body)
-                    if (isNaN(body)) body = 16
-                    let res = 'a'
-                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
-
-                    message.mentions.users.forEach(tagged => {
-                        const res = Math.floor(Math.random() * body) + 1
-
-                        options = {
-                            method: 'GET',
-                            url: `${API}curses`,
-                            qs: {
-                                curse_id: res
-                            }
-                        }
-
-                        request(options, (error, response, body) => {
-                            if (error) throw new Error(error)
-
-                            if (!body.startsWith('<')) body = JSON.parse(body)
-                            else body = ''
-
-                            if (body.length > 0) message.channel.send(`${body[0].curse} kamu, <@${tagged.id}>!`)
-                            else {
-                                console.log("Curse Error: " + res)
-                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
-                            }
-                        })
-
-                    })
-                })
-                break
-            case '!remind':
-
-                options = {
-                    method: 'GET',
-                    url: `${API}reminders/count`
-                }
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error)
-
-                    body = parseInt(body)
-                    if (isNaN(body)) body = 16
-                    let res = 'a'
-                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
-
-                    if (!message.mentions.users.size) {
-                        const res = Math.floor(Math.random() * body) + 1
-
-                        options = {
-                            method: 'GET',
-                            url: `${API}reminders`,
-                            qs: {
-                                quote_id: res
-                            }
-                        }
-
-                        request(options, (error, response, body) => {
-                            if (error) throw new Error(error)
-
-                            if (!body.startsWith('<')) body = JSON.parse(body)
-                            else body = ''
-
-                            if (body.length > 0) return message.reply(body[0].quote)
-                            else {
-                                console.log("Reminder Error: " + res)
-                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
-                            }
-                        })
-                    }
-
-                    message.mentions.users.forEach(tagged => {
-                        const res = Math.floor(Math.random() * body) + 1
-
-                        options = {
-                            method: 'GET',
-                            url: `${API}reminders`,
-                            qs: {
-                                quote_id: res
-                            }
-                        }
-
-                        request(options, (error, response, body) => {
-                            if (error) throw new Error(error)
-
-                            if (!body.startsWith('<')) body = JSON.parse(body)
-                            else body = ''
-
-                            if (body.length > 0) message.channel.send(`<@${tagged.id}> ${body[0].quote}`)
-                            else {
-                                console.log("Reminder Error: " + res)
-                                return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
-                            }
-                        })
-                    })
-                })
-
-                break
-
-            case '!gosip':
-
-                options = {
-                    method: 'GET',
-                    url: `${API}egossips/count`
-                }
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error)
-
-                    body = parseInt(body)
-                    if (isNaN(body)) body = 16
-                    let res = 'a'
-                    while (isNaN(res)) res = Math.floor(Math.random() * body) + 1
-
-                    options = {
-                        method: 'GET',
-                        url: `${API}egossips`,
-                        qs: {
-                            gossip_id: res
-                        }
-                    }
-
-                    request(options, (error, response, body) => {
-                        if (error) throw new Error(error)
-
-                        if (!body.startsWith('<')) body = JSON.parse(body)
-                        else body = ''
-
-                        if (body.length > 0) return message.reply(body[0].gossip)
-                        else {
-                            console.log("Gosip Error: " + res)
-                            return message.reply('Yah, ada error! Coba lagi atau cek `!bantu` deh.')
-                        }
-                    })
-                })
-
-                break
-            case '!topexp':
-                let count = 10
-                if (args.length > 0) count = args[0]
-                if (count > 25) return message.reply('MAKSIMAL 25 YA!!')
-
-                search.buildParams(message, client, ['-sort'], ['exp'])
-
-                break
-            case '!ddr':
-                if (args.length == 0) return message.reply('Mana parameternyaa')
-                else tools.rollMessage(message, args[0])
-                break
-            case '!latest':
-                let amount = 10
-                if (args.length == 0) amount = 10
-                else if (isNaN(parseInt(args[0]))) return message.reply('Parameter harus angka oi.')
-                else amount = parseInt(args[0])
-
-                message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
-                eleftheria.fetchLatestTopics(client, message, amount)
-                break
-            case '!top':
-                let limit = 10
-                if (args.length == 0) limit = 10
-                else if (isNaN(parseInt(args[0]))) return message.reply('Parameter harus angka oi.')
-                else limit = parseInt(args[0])
-
-                if (limit > 20) return message.reply('Limit maksimal 20!')
-
-                message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
-                eleftheria.getTopCampers(client, message, limit)
-                break
-
-            case '!toptoday':
-                message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
-                eleftheria.getTopToday(client, message)
-                break
-            case '!search':
-                if (args.length == 0) return message.reply('Mau nyari siapa oi oi.')
-                if (!args[0].startsWith('-')) {
-                    let name = args[0]
-                    if (args.length > 1) name = args.join(' ')
-                    if (name.length < 3) message.reply('Minimal 3 karakter lah nyarinya :(')
-                    else {
-                        message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
-                        eleftheria.searchCampers(client, message, name)
-                    }
-                } else {
-                    var pars = tools.paramBuilder(message, client, args)
-                    var arguments = pars[0]
-                    var queries = pars[1]
-
-                    search.buildParams(message, client, arguments, queries)
-                }
-                break
-            case '!detail':
-                if (args.length == 0) return message.reply('Mau nyari siapa oi oi.')
-                else if (isNaN(parseInt(args[0]))) return message.reply('Harus angka oi.')
-                else {
-                    message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
-                    eleftheria.getUser(client, message, args[0])
-                }
-                break
-            case '!pvp':
-                if (args.length == 0 || typeof args[1] == 'undefined') return message.reply('Harus ada dua id user oi.')
-                else if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return message.reply('Harus angka oi ID-nya.')
-                else if (message.content.trim() == '!pvp 286 286') return message.reply('Maaf, pvp Nicollo vs Nicollo tanpa limit ronde diban, lelah lihatnya.')
-                else if (message.content.trim() == '!pvp 189 189') return message.reply('Maaf, pvp Dorcas vs Dorcas juga  diban kalau tanpa limit ronde, *please have mercy*.')
-                else if (message.content.trim() == '!pvp 228 228') return message.reply('Maaf, pvp Lorcan vs Lorvan juga  diban kalau tanpa limit ronde, *please have mercy*.')
-                else if (message.content.trim() == '!pvp 286 189' || message.content.trim() == '!pvp 189 286' || message.content.trim() == '!pvp 189 228' || message.content.trim() == '!pvp 228 189' || message.content.trim() == '!pvp 286 228' || message.content.trim() == '!pvp 228 286') return message.reply('PvP ini diban. *please have mercy*.')
-                else {
-                    let ronde = ''
-                    if (typeof args[2] != 'undefined' && !isNaN(parseInt(args[2]))) ronde = parseInt(args[2])
-                    if (ronde > 300) return message.reply('Maaf, ronde gak boleh lebih dari 300. Cape.')
-                    message.channel.send('Tunggu sebentar ya, sayang, datanya lagi diambil, nih. Kalau gak muncul-muncul, aku lagi halu.')
-                    eleftheria.PvP(client, message, args[0], args[1], ronde)
-                }
-                break
-            case '!tagih':
-                if (!message.mentions.users.size) {
-                    message.channel.send("", {
-                        files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"]
-                    })
-                } else {
-                    message.channel.send(args.join(', '), {
-                        files: ["https://cdn.discordapp.com/attachments/572834275456450561/592364385083588608/3f00896020f874f55f19fb1ef39445ae.png"]
-                    })
-                }
-                break
-            case '!guide':
-                if (!message.mentions.users.size) {
-                    return message.reply('Tag orang dulu.')
-                }
-
-                message.channel.send(args.join(', '), {
-                    files: ["https://cdn.discordapp.com/attachments/572834275456450561/592226480713367553/IMG_20190422_153330.jpg"]
-                })
-                break
-            case '!kangen':
-                if (args.length == 0 && !message.mentions.users.size) return message.reply('Makasih, tapi aku gak kangen kamu.')
-                else if (args.length > 0 && !message.mentions.users.size) {
-                    name = args.join(' ')
-                    let user = message.guild.members.find(user => user.nickname == name)
-                    if (user == null) user = message.guild.members.find(user => user.username == name)
-
-                    if (user != null) {
-                        if (message.author.id == user.id) return message.reply('Apa-apaan kangen diri sendiri. Cuh.')
-                        else message.channel.send(`<@${user.id}>, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian. `)
-                    } else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
-                } else if (message.mentions.users.size) {
-                    message.channel.send(`${args.join(', ')}, katanya <@${message.author.id}> kangen nich. Unch, unch, ucu deh kalian.`)
-                }
-                break
-            case '!pukpuk':
-                if (!message.mentions.users.size) {
-                    return message.reply('Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
-                }
-
-                message.channel.send(args.join(', ') + ' Semangat! You can go through this! You are strooong~ https://i.gifer.com/7MPC.gif')
-                break
-
-            case '!hempas':
-                if (args.length == 0 && !message.mentions.users.size) return message.reply('Maaf, aku unhempasable.')
-                else if (args.length > 0 && !message.mentions.users.size) {
-                    name = args.join(' ')
-                    let user = message.guild.members.find(user => user.nickname == name)
-                    if (user == null) user = message.guild.members.find(user => user.username == name)
-
-                    if (user != null) {
-                        if (message.author.id == user.id) return message.reply('Wah kamu maso ya hempas diri sendiri.')
-                        else message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${user.id}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
-                    } else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
-                } else if (message.mentions.users.size) {
-
-                    message.channel.send(`Dan <@${message.author.id}> pun berkata pada ${args.join(', ')}, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
-                }
-                break
-            case '!generate':
-
-                let from = 'united states'
-                if (args.length > 0) {
-
-                    var pars = tools.paramBuilder(message, client, args)
-                    var arguments = pars[0]
-                    var queries = pars[1]
-
-                    arguments.forEach((arg, idx) => {
-                        if (arg == '-from') {
-                            from = queries[idx].toUpperCase()
-                        }
-                    })
-                }
-
-                options = {
-                    method: 'GET',
-                    url: 'https://uinames.com/api/',
-                    qs: {
-                        ext: '',
-                        region: from
-                    }
-                };
-
-                request(options, (error, response, body) => {
-                    if (error) throw new Error(error);
-
-                    body = JSON.parse(body)
-                    if (typeof body.error != 'undefined') message.reply(body.error)
-                    else message.reply(`**${body.name + ' ' + body.surname}** - ${body.gender} - Birthday ${body.birthday.dmy.substring(0, 5)}`)
-                });
-                break
-
-            case '!fmk':
-                if (args.length == 0) return message.reply('Mau FMK siapa?')
-                else {
-                    message.channel.send(args.join(' ')).then(sentEmbed => {
-                        sentEmbed.react("🇫")
-                        sentEmbed.react("🇲")
-                        sentEmbed.react("🇰")
-                    })
-                }
-                break
-
-            case '!fmk2':
-                if (args.length != 3) return message.reply('Masukan 3 nama.')
-                else {
-                    for (let i = args.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [args[i], args[j]] = [args[j], args[i]];
-                    }
-
-                    let string = `I will F: ${args[0]}, M: ${args[1]}, K: ${args[2]}\n`
-                    message.channel.send(string)
-                }
-                break
-
-            case '!fmk3':
-                if (args.length != 3) return message.reply('Masukan 3 nama.')
-                else {
-
-                    let string = `A. F: ${args[0]}, M: ${args[1]}, K: ${args[2]}\n`
-                    string += `B. F: ${args[0]}, M: ${args[2]}, K: ${args[1]}\n`
-                    string += `C. F: ${args[1]}, M: ${args[0]}, K: ${args[2]}\n`
-                    string += `D. F: ${args[1]}, M: ${args[2]}, K: ${args[0]}\n`
-                    string += `E. F: ${args[2]}, M: ${args[0]}, K: ${args[1]}\n`
-                    string += `F. F: ${args[2]}, M: ${args[1]}, K: ${args[0]}\n`
-                    message.channel.send(string).then(sentEmbed => {
-                        sentEmbed.react("🇦")
-                        sentEmbed.react("🇧")
-                        sentEmbed.react("🇨")
-                        sentEmbed.react("🇩")
-                        sentEmbed.react("🇪")
-                        sentEmbed.react("🇫")
-                    })
-                }
-                break
-
-            case '!bantu':
-                options = {
+        let args = message.content.split(/ +/)
+        if (command !== 'play') command = args.shift().toLowerCase().replace('!', '')
+        let commandExec = client.commands.get(command)
+        
+        try {
+            if (commandExec && commandExec.name) {
+                commandExec.execute(message, client)
+            } else if (command === 'bantu') {
+                let listAll = Array.from(client.commands)
+                let options = {
                     method: 'GET',
                     url: `${API}commands`
                 }
@@ -584,36 +129,35 @@ client.on('message', message => {
 
                     if (body.length > 0) {
                         body.forEach(v => {
-                            commands.push(v.command)
+                            if(!client.commands.get(v.command.replace('!', ''))) commands.push(v.command)
                         })
                     }
 
-                    commands.push('!gosip, !howto')
                     commands = commands.join(", ")
 
-                    let rcommands = '**!curse <mention orangnya>** untuk merutuki orang, boleh tag lebih dari satu.\n'
-                    rcommands += '**!praise <mention orangnya>**, boleh tag lebih dari satu.\n'
-                    rcommands += '**!remind <mention orangnya>** untuk mengingatkan orang, boleh tag lebih dari satu.\n**!tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
+                    let rcommands = '**tagih <mention orangnya>** untuk tagih repp, boleh tag lebih dari satu.\n'
                     rcommands += '**!guide <mention orangnya>** untuk mengarahkan orang, boleh tag lebih dari satu.\n'
                     rcommands += '**!pukpuk <mention orangnya>** untuk ngepukpuk.\n'
-                    rcommands += '**!kangen <nickname di server ini>** untuk bilang kangen via Nicollo.\n'
-                    rcommands += '**!hempas <nickname di server ini>** untuk menghempas via Nicollo.\n'
-                    rcommands += '**!play <lagu> atau Nicollo, play <lagu>**.\n'
 
-                    let tcommands = '**!ddr 1d5** untuk dice roll\n'
-                    tcommands += '**!generate -from (negara)** Untuk generate nama, gender, dan ulang tahun untuk inspirasi membuat karakter baru. parameter -from bersifat opsional, default united states.\n'
-                    tcommands += '**!fmk (nama)** vote fuck, marry, kill untuk satu nama.\n'
-                    tcommands += '**!fmk2 (nama1) (nama2) (nama3)** f, m, k pilihan Nicollo.\n'
-                    tcommands += '**!fmk3 (nama1) (nama2) (nama3)** f, m, k pilihan masyarakat (alias pakai vote).'
+                    let tcommands = ''
 
-                    let ecommands = '**!latest <angka>** untuk melihat latest topics di forum\n'
-                    ecommands += '**!detail <userid>** untuk melihat data karakter agak lebih lengkap, ID bisa dicari pakai !search\n'
-                    ecommands += '**!pvp <userid1> <userid2> <ronde>** simulasi PVP, ID bisa dicari pakai !search, kalau mau coba di channel yang sepi deh.\n'
-                    ecommands += '**!toptoday** untuk melihat member terajin hari ini.\n'
+                    let ecommands = '**!gosip** gosip seputar eleftheria\n'
 
                     let search = '**!search -parent (nama dewa/i atau UNCLAIMED)**, search berdasarkan orang tua.\n'
                     search += '**!search -ability (nama ability)**, search berdasarkan ability.\n'
                     search += '**!search -sort (Post/EXP/HP/ATK/DEF)**, search berdasarkan jumlah post/EXP/HP points.\n - Untuk post masih dapat menggunakan !top <limit>\n - Untuk EXP masih dapat menggunakan !topexp <limit>'
+
+                    listAll.forEach(command => {
+                        if (command[1].type === 'interaction') {
+                            rcommands += `**!${command[1].name} ${command[1].parameter}** ${command[1].description}\n`
+                        }
+                        if (command[1].type === 'tools') {
+                            tcommands += `**!${command[1].name} ${command[1].parameter}** ${command[1].description}\n`
+                        }
+                        if (command[1].type === 'eleftheria') {
+                            ecommands += `**!${command[1].name} ${command[1].parameter}** ${command[1].description}\n`
+                        }
+                    })
 
                     message.channel.send({
                         embed: {
@@ -645,18 +189,16 @@ client.on('message', message => {
                             }],
                             timestamp: new Date()
                         }
-
                     })
                 })
-                break
-
-            case '!new':
-
+            } else if (command === 'new') {
                 let rcommands = '**Deleted commands:** !howto, !love, !convert\n'
                 rcommands += '**New Commands:**\n'
                 rcommands += '- **Nicollo, play (lagu)** tahulah ya buat apa. Untuk lebih singkat, bisa pakai `!play (apagitu)`\n'
                 rcommands += '**Database:**\n'
-                rcommands += 'Untuk database karakter sekarang bisa diakses lewat http://eleftheria.prosa.id. Untuk submit gosip bisa lewat http://eleftheria.prosa.id/submit'
+                rcommands += 'Untuk database karakter sekarang bisa diakses lewat https://eleftheria.prosa.id. Untuk submit gosip bisa lewat https://eleftheria.prosa.id/submit\n'
+                rcommands += '**Help:**\n'
+                rcommands += 'Buat bantu bangun Nicollo, buka https://github.com/flavea/eleftheria-bot'
 
                 message.channel.send({
                     embed: {
@@ -671,13 +213,50 @@ client.on('message', message => {
                             url: client.user.avatarURL,
                         },
                         fields: [{
-                            name: 'September 17th 2019',
+                            name: 'September 17th - October 15th 2019',
                             value: rcommands
                         }],
                         timestamp: new Date()
                     }
                 })
-                break
+            } else {
+                let mentioned = ''
+                command = `!${command}`
+
+                if (message.mentions.users.size) {
+                    mentioned = args.join(' ')
+                }
+
+                let options = {
+                    method: 'GET',
+                    url: `${API}commands`,
+                    qs: {
+                        command: command
+                    }
+                }
+
+                request(options, (error, response, body) => {
+                    if (error) throw new Error(error)
+
+                    if (!body.startsWith('<')) body = JSON.parse(body)
+                    else body = ''
+
+                    if (body.length > 0) {
+                        body.forEach(v => {
+                            if (v.attachment != '') {
+                                message.channel.send(v.message == '' ? mentioned : mentioned + ' ' + v.message, {
+                                    files: [v.attachment == null ? '' : v.attachment]
+                                })
+                            } else if (v.message != null) {
+                                message.channel.send(v.message)
+                            }
+                        })
+                    }
+                })
+            }
+        } catch (error) {
+            console.error(error)
+            message.reply('There was an error trying to execute that command!')
         }
     }
 })

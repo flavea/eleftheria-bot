@@ -20,8 +20,8 @@ $(document).ready(function () {
                     $("#content").show()
                     $("#loading").hide()
                     alert("Gosip sudah masuk ke kantong!")
-                });
-            });
+                })
+            })
         }
     })
-});
+})

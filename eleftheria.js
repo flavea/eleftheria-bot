@@ -146,7 +146,7 @@ module.exports = {
             })
 
             userData.link = d.trim()
-            userData.id = d.replace('/index.php?showuser=', '')
+            userData.id = d.replace('index.php?showuser=', '')
             data.push(userData)
         }))
 
@@ -188,7 +188,7 @@ module.exports = {
         })
         const page = await browser.newPage()
         await page.setViewport({ width: 0, height: 0 })
-        await page.goto(forum + '/index.php?showuser=' + id, { waitUntil: 'load', timeout: 3000000 })
+        await page.goto(forum + 'index.php?showuser=' + id, { waitUntil: 'load', timeout: 3000000 })
 
         let userData = await page.evaluate(() => {
             let uData = {}
@@ -223,7 +223,7 @@ module.exports = {
                         icon_url: client.user.avatarURL
                     },
                     title: userData.name,
-                    url: forum + '/index.php?showuser=' + id,
+                    url: forum + 'index.php?showuser=' + id,
                     description: userData.title,
                     thumbnail: {
                         url: userData.Image,
@@ -307,7 +307,7 @@ module.exports = {
                     elements.forEach((element) => {
                         try {
                             foundCampers.push({
-                                id: element.getAttribute('href').trim().replace('/index.php?showuser=', ''),
+                                id: element.getAttribute('href').trim().replace('index.php?showuser=', ''),
                                 url: element.getAttribute('href').trim(),
                                 name: element.querySelector('.camper-name > h2').innerText,
                                 title : element.querySelector('div:nth-child(3) > span').innerText,
@@ -435,7 +435,7 @@ module.exports = {
         })
         const page = await browser.newPage()
         await page.setViewport({ width: 0, height: 0 })
-        await page.goto(forum + '/index.php?showuser=' + id1, { waitUntil: 'load', timeout: 3000000 })
+        await page.goto(forum + 'index.php?showuser=' + id1, { waitUntil: 'load', timeout: 3000000 })
 
         let userData1 = await page.evaluate(() => {
             let uData = {}
@@ -454,7 +454,7 @@ module.exports = {
         if (typeof userData1.name == "undefined") return message.channel.send(`User ${id1} ghaib, gak ketemu!`)
         else if (userData1.HP == null) return message.channel.send(`User ${userData1.name} belum punya battle points, jadi belum bisa berantem, uwu`)
 
-        await page.goto(forum + '/index.php?showuser=' + id2, { waitUntil: 'load', timeout: 3000000 })
+        await page.goto(forum + 'index.php?showuser=' + id2, { waitUntil: 'load', timeout: 3000000 })
 
         let userData2 = await page.evaluate(() => {
             let uData = {}

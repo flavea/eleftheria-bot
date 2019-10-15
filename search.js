@@ -41,7 +41,7 @@ module.exports = {
             var options = {
                 method: 'GET',
                 url: `${API}emembers${query}`
-            };
+            }
 
             request(options, (error, response, body) => {
                 if (error) throw new Error(error)
