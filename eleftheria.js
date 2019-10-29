@@ -146,7 +146,7 @@ module.exports = {
             })
 
             userData.link = d.trim()
-            userData.id = d.replace('index.php?showuser=', '')
+            userData.id = d.replace('/index.php?showuser=', '')
             data.push(userData)
         }))
 
@@ -307,7 +307,7 @@ module.exports = {
                     elements.forEach((element) => {
                         try {
                             foundCampers.push({
-                                id: element.getAttribute('href').trim().replace('index.php?showuser=', ''),
+                                id: element.getAttribute('href').trim().replace('/index.php?showuser=', ''),
                                 url: element.getAttribute('href').trim(),
                                 name: element.querySelector('.camper-name > h2').innerText,
                                 title : element.querySelector('div:nth-child(3) > span').innerText,

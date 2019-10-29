@@ -86,7 +86,7 @@ async function fetch() {
         })
 
         d.link = links[f].trim()
-        d.id = parseInt(links[f].replace('index.php?showuser=', ''))
+        d.id = parseInt(links[f].replace('/index.php?showuser=', ''))
 
         if (typeof d.name != 'undefined') {
 

@@ -11,10 +11,9 @@ module.exports = {
 			name = args.join(' ')
 			let user = message.guild.members.find(user => user.nickname == name)
 			if (user == null) user = message.guild.members.find(user => user.username == name)
-
 			if (user != null) {
 				if (message.author.id == user.id) return message.reply('Wah kamu maso ya hempas diri sendiri.')
-				else message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${user.id}>, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
+				else message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${user.id}>, dengan suara halus, tangan menyentuh sisi wajah lawan bicaranya dengan lembut, "Maaf ya," ujarnya, "Kita sampai disini saja, karena aku terlalu baik untukmu. Lebih baik kamu cari yang lain."`)
 			} else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
 		} else if (message.mentions.users.size) {
 
