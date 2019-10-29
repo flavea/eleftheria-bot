@@ -16,8 +16,7 @@ module.exports = {
 				else message.channel.send(`Dan <@${message.author.id}> pun berkata pada <@${user.id}>, dengan suara halus, tangan menyentuh sisi wajah lawan bicaranya dengan lembut, "Maaf ya," ujarnya, "Kita sampai disini saja, karena aku terlalu baik untukmu. Lebih baik kamu cari yang lain."`)
 			} else return message.reply(`Uhmmm, ${name} gak ketemu di sini, coba cek lagi nicknamenya atau suruh orangnya bikin nama satu nama aja. Atau, lebih oke lagi, langsung ngomong ke orangnya.`)
 		} else if (message.mentions.users.size) {
-
-			message.channel.send(`Dan <@${message.author.id}> pun berkata pada ${args.join(', ')}, "Maaf, aku terlalu baik untukmu. Lebih baik kamu pilih yang lain."`)
+			message.channel.send(`Dan <@${message.author.id}> pun berkata pada ${args.join(', ')}, dengan suara halus, tangan menyentuh sisi wajah lawan bicaranya dengan lembut, "Maaf ya," ujarnya, "Kita sampai disini saja, karena aku terlalu baik untukmu. Lebih baik kamu cari yang lain."`)
 		}
 	}
 }
