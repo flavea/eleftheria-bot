@@ -66,7 +66,11 @@ async function fetch() {
             uData.ATK = document.querySelector('#battle-points > div:nth-child(3) > span').innerText
             uData.DEF = document.querySelector('#battle-points > div:nth-child(4) > span').innerText
             let Group = document.querySelector('#profile1 > div:nth-child(1) > span').innerText
-            if (uData.HP != "No Information" && uData.ATK != "No Information" && uData.DEF != "No Information" && Group != "God" && Group != "Goddess") {
+
+            if (uData.HP == "No Information") uData.HP = 840
+            if (uData.ATK == "No Information") uData.ATK = 0
+            if (uData.DEF == "No Information") uData.DEF = 0
+            if (Group != "God" && Group != "Goddess"  && Group != "Admin"  && Group != "Others"  && Group != "Titan") {
                 let ATK = uData.ATK.split('d')
                 let EXP = 0
                 if (ATK.length > 1) ATK = ATK[1].split('+')
