@@ -30,12 +30,8 @@ $(document).ready(function () {
     $.ajax(settings).done(function (response) {
         response.forEach(e => {
             let ch = $('.tmpTR').clone().removeClass('tmpTR').show()
-
-            let Weapon = e.Weapon.split(' - ')
-            if (Weapon.length == 1) Weapon = e.Weapon.split(', ')
-            if (Weapon.length == 1) Weapon = e.Weapon.split('—')
-            if (Weapon.length == 1) Weapon = e.Weapon.split('')
-            if (Weapon.length == 1) Weapon = e.Weapon.split(':')
+            let Weapon = e.Weapon.replace(/\u2013|\u2014/g, ": ");
+            if (Weapon.includes(':')) Weapon = Weapon.split(':')
 
 
             let Title = titleCase(e.Title).split('of')
@@ -44,7 +40,7 @@ $(document).ready(function () {
             $('.iName', ch).html(titleCase(e.Name))
             $('.iTitle', ch).html(Title[0] == 'Unclaimed' ? "Unknown" : Title[1])
             $('.iAbility', ch).html(e.Ability == 'No Information' ? "-" : e.Ability)
-            $('.iWeapon', ch).html(Weapon[0] == 'No Information' ? "-" : Weapon[0])
+            $('.iWeapon', ch).html(typeof Weapon == 'object' && Weapon[0] != 'No Information' ? Weapon[0] : '-')
             $('.iHP', ch).html(e.HP)
             $('.iEXP', ch).html(e.EXP)
             $('.iATKPoint', ch).html(e.ATK)

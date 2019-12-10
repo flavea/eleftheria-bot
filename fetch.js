@@ -70,14 +70,18 @@ async function fetch() {
             if (uData.HP == "No Information") uData.HP = 840
             if (uData.ATK == "No Information") uData.ATK = 0
             if (uData.DEF == "No Information") uData.DEF = 0
-            if (Group != "God" && Group != "Goddess"  && Group != "Admin"  && Group != "Others"  && Group != "Titan") {
-                let ATK = uData.ATK.split('d')
-                let EXP = 0
-                if (ATK.length > 1) ATK = ATK[1].split('+')
-                let DEF = uData.DEF.split('d')
-                if (DEF.length > 1) DEF = DEF[1].split('+')
-                if (ATK.length > 1 && DEF.length > 1) EXP = parseInt(ATK) + parseInt(DEF)
-                else EXP = document.querySelector('#battle-points > div:nth-child(5) > span').innerText
+            if (Group != "God" && Group != "Goddess" && Group != "Admin" && Group != "Others" && Group != "Titan" && Group != "Registering" && !Group.includes('Validating')) {
+                let ATK = [0, 0]
+                let DEF = [0, 0]
+                let EXP = 0;
+                if (uData.ATK) {
+                    ATK = uData.ATK ? uData.ATK.split('d') : [0, '0+0']
+                    if (ATK.length > 1) ATK = ATK[1].split('+')
+                    DEF = uData.DEF ? uData.DEF.split('d') : [0, '0+0']
+                    if (DEF.length > 1) DEF = DEF[1].split('+')
+                    if (ATK.length > 1 && DEF.length > 1) EXP = parseInt(ATK) + parseInt(DEF)
+                    else EXP = document.querySelector('#battle-points > div:nth-child(5) > span').innerText
+                }
 
                 uData.name = document.querySelector('#profile-header > h1').innerText
                 uData.title = document.querySelector('#profile-header > span').innerText
@@ -110,10 +114,14 @@ async function fetch() {
 
                 body = JSON.parse(body)
 
-                let ATK = d.ATK.split('d')
-                if (ATK.length > 1) ATK = ATK[1].split('+')
-                let DEF = d.DEF.split('d')
-                if (DEF.length > 1) DEF = DEF[1].split('+')
+                let ATK = [0, 0]
+                let DEF = [0, 0]
+                if (d.ATK) {
+                    ATK = d.ATK.split('d')
+                    if (ATK.length > 1) ATK = ATK[1].split('+')
+                    DEF = d.DEF.split('d')
+                    if (DEF.length > 1) DEF = DEF[1].split('+')
+                }
 
                 if (body.length > 0) {
 
@@ -131,8 +139,8 @@ async function fetch() {
                             Ability: d.Ability,
                             Weapon: d.Weapon,
                             Post: d.postcount,
-                            HP: d.HP,
-                            EXP: d.EXP,
+                            HP: parseInt(d.HP),
+                            EXP: parseInt(d.EXP),
                             ATK: ATK[0],
                             DEF: DEF[0],
                             ATKP: ATK[1],
@@ -162,8 +170,8 @@ async function fetch() {
                             Ability: d.Ability,
                             Weapon: d.Weapon,
                             Post: d.postcount,
-                            HP: d.HP,
-                            EXP: d.EXP,
+                            HP: parseInt(d.HP),
+                            EXP: parseInt(d.EXP),
                             ATK: ATK[0],
                             DEF: DEF[0],
                             ATKP: ATK[1],
