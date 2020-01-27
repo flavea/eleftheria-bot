@@ -4,7 +4,7 @@ const tools = require('./tools.js')
 const forum = process.env.FORUM
 
 module.exports = {
-    fetchLatestTopics: async function(client, message, amount) {
+    fetchLatestTopics: async function (client, message, amount) {
         const browser = await puppeteer.launch({
             'args': [
                 '--no-sandbox',
@@ -12,15 +12,26 @@ module.exports = {
             ]
         })
         const page = await browser.newPage()
-        await page.setViewport({ width: 0, height: 0 })
+        await page.setViewport({
+            width: 0,
+            height: 0
+        })
         try {
-            await page.goto(forum + 'index.php?act=Login&CODE=00', { waitUntil: 'load', timeout: 3000000 })
-            await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME)
-            await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD)
-            await page.click('#ipbwrapper > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]')
-            await page.click('#ipbwrapper > form > div > div:nth-child(6) > input')
-            await page.waitForNavigation({ waitUntil: 'load' })
-            await page.goto(forum + 'index.php?act=Search&CODE=getactive', { waitUntil: 'load', timeout: 3000000 })
+            await page.goto(forum + 'index.php?act=Login&CODE=00', {
+                waitUntil: 'load',
+                timeout: 3000000
+            })
+            await page.type('#ipbwrapper > div.d-style > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME)
+            await page.type('#ipbwrapper > div.d-style > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD)
+            await page.click('#ipbwrapper > div.d-style > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]')
+            await page.click('#ipbwrapper > div.d-style > form > div > div:nth-child(6) > input')
+            await page.waitForNavigation({
+                waitUntil: 'load'
+            })
+            await page.goto(forum + 'index.php?act=Search&CODE=getactive', {
+                waitUntil: 'load',
+                timeout: 3000000
+            })
         } catch (exception) {
             console.log(exception)
         }
@@ -83,7 +94,7 @@ module.exports = {
 
         browser.close()
     },
-    searchCampers: async function(client, message, camper) {
+    searchCampers: async function (client, message, camper) {
 
         const browser = await puppeteer.launch({
             'args': [
@@ -92,15 +103,23 @@ module.exports = {
             ]
         })
         const page = await browser.newPage()
-        await page.setViewport({ width: 0, height: 0 })
+        await page.setViewport({
+            width: 0,
+            height: 0
+        })
 
         try {
-            await page.goto(forum + 'index.php?act=Members', { waitUntil: 'load', timeout: 3000000 })
+            await page.goto(forum + 'index.php?act=Members', {
+                waitUntil: 'load',
+                timeout: 3000000
+            })
             await page.type('.memberlist-namesearch', camper)
 
             await Promise.all([
-                page.click('#ipbwrapper > form > div.darkrow1 > center > input'),
-                page.waitForNavigation({ waitUntil: 'load' }),
+                page.click('#ipbwrapper > div.d-style > form > div:nth-child(3) > center > input'),
+                page.waitForNavigation({
+                    waitUntil: 'load'
+                }),
             ])
         } catch (exception) {
             console.log(exception)
@@ -118,7 +137,7 @@ module.exports = {
                             console.log(exception)
                         }
                     })
-                } 
+                }
             } catch (exception) {
                 console.log(exception)
             }
@@ -129,10 +148,16 @@ module.exports = {
         let data = []
         let pages = []
 
-        await Promise.all(founds.map(async function(d, i) {
+        await Promise.all(founds.map(async function (d, i) {
             pages[i] = await browser.newPage()
-            await pages[i].setViewport({ width: 0, height: 0 })
-            await pages[i].goto(forum + d, { waitUntil: 'load', timeout: 3000000 })
+            await pages[i].setViewport({
+                width: 0,
+                height: 0
+            })
+            await pages[i].goto(forum + d, {
+                waitUntil: 'load',
+                timeout: 3000000
+            })
 
             let userData = await pages[i].evaluate(() => {
                 let uData = {}
@@ -179,7 +204,7 @@ module.exports = {
             browser.close()
         }
     },
-    getUser: async function(client, message, id) {
+    getUser: async function (client, message, id) {
         const browser = await puppeteer.launch({
             'args': [
                 '--no-sandbox',
@@ -187,8 +212,14 @@ module.exports = {
             ]
         })
         const page = await browser.newPage()
-        await page.setViewport({ width: 0, height: 0 })
-        await page.goto(forum + 'index.php?showuser=' + id, { waitUntil: 'load', timeout: 3000000 })
+        await page.setViewport({
+            width: 0,
+            height: 0
+        })
+        await page.goto(forum + 'index.php?showuser=' + id, {
+            waitUntil: 'load',
+            timeout: 3000000
+        })
 
         let userData = await page.evaluate(() => {
             let uData = {}
@@ -286,7 +317,7 @@ module.exports = {
         browser.close()
 
     },
-    getTopCampers: async function(client, message, limit) {
+    getTopCampers: async function (client, message, limit) {
 
         const browser = await puppeteer.launch({
             'args': [
@@ -295,9 +326,15 @@ module.exports = {
             ]
         })
         const page = await browser.newPage()
-        await page.setViewport({ width: 0, height: 0 })
+        await page.setViewport({
+            width: 0,
+            height: 0
+        })
 
-        await page.goto(forum + 'index.php?act=Members&max_results=' + limit +'&sort_key=posts&sort_order=desc', { waitUntil: 'load', timeout: 3000000 })
+        await page.goto(forum + 'index.php?act=Members&max_results=' + limit + '&sort_key=posts&sort_order=desc', {
+            waitUntil: 'load',
+            timeout: 3000000
+        })
 
         let data = await page.evaluate(() => {
             let foundCampers = []
@@ -310,8 +347,8 @@ module.exports = {
                                 id: element.getAttribute('href').trim().replace('/index.php?showuser=', ''),
                                 url: element.getAttribute('href').trim(),
                                 name: element.querySelector('.camper-name > h2').innerText,
-                                title : element.querySelector('div:nth-child(3) > span').innerText,
-                                posts : element.querySelector('div:nth-child(5)').innerText
+                                title: element.querySelector('div:nth-child(3) > span').innerText,
+                                posts: element.querySelector('div:nth-child(5)').innerText
                             })
                         } catch (exception) {
                             console.log(exception)
@@ -343,7 +380,7 @@ module.exports = {
                         icon_url: client.user.avatarURL
                     },
                     title: `Top ${limit} members`,
-                    url: forum + 'index.php?act=Members&max_results=' + limit +'&sort_key=posts&sort_order=desc',
+                    url: forum + 'index.php?act=Members&max_results=' + limit + '&sort_key=posts&sort_order=desc',
                     description: "Members dengan post count tertinggi.",
                     fields: list,
                     timestamp: new Date()
@@ -353,7 +390,7 @@ module.exports = {
             browser.close()
         }
     },
-    getTopToday: async function(client, message) {
+    getTopToday: async function (client, message) {
 
         const browser = await puppeteer.launch({
             'args': [
@@ -362,14 +399,25 @@ module.exports = {
             ]
         })
         const page = await browser.newPage()
-        await page.setViewport({ width: 0, height: 0 })
-        await page.goto(forum + 'index.php?act=Login&CODE=00', { waitUntil: 'load', timeout: 3000000 })
-        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME)
-        await page.type('#ipbwrapper > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD)
-        await page.click('#ipbwrapper > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]')
-        await page.click('#ipbwrapper > form > div > div:nth-child(6) > input')
-        await page.waitForNavigation({ waitUntil: 'load' })
-        await page.goto(forum + 'index.php?act=Stats', { waitUntil: 'load', timeout: 3000000 })
+        await page.setViewport({
+            width: 0,
+            height: 0
+        })
+        await page.goto(forum + 'index.php?act=Login&CODE=00', {
+            waitUntil: 'load',
+            timeout: 3000000
+        })
+        await page.type('#ipbwrapper > div.d-style > form > div > table:nth-child(3) > tbody > tr:nth-child(1) > td.pformright > input', process.env.FORUM_USERNAME)
+        await page.type('#ipbwrapper > div.d-style > form > div > table:nth-child(3) > tbody > tr:nth-child(2) > td.pformright > input', process.env.FORUM_PASSWORD)
+        await page.click('#ipbwrapper > div.d-style > form > div > table:nth-child(5) > tbody > tr:nth-child(2) > td.pformright > input[type=checkbox]')
+        await page.click('#ipbwrapper > div.d-style > form > div > div:nth-child(6) > input')
+        await page.waitForNavigation({
+            waitUntil: 'load'
+        })
+        await page.goto(forum + 'index.php?act=Stats', {
+            waitUntil: 'load',
+            timeout: 3000000
+        })
 
         let data = await page.evaluate(() => {
             let foundCampers = []
@@ -382,8 +430,8 @@ module.exports = {
                             foundCampers.push({
                                 url: element.querySelector('td:nth-child(1) > a').getAttribute('href').trim(),
                                 name: element.querySelector('td:nth-child(1) > a').innerText,
-                                posts : element.querySelector('td:nth-child(2)').innerText,
-                                percentage : element.querySelector('td:nth-child(3)').innerText,
+                                posts: element.querySelector('td:nth-child(2)').innerText,
+                                percentage: element.querySelector('td:nth-child(3)').innerText,
                                 today: today.replace('Total posts today: ', '')
                             })
                         } catch (exception) {
@@ -426,7 +474,7 @@ module.exports = {
             browser.close()
         }
     },
-    PvP: async function(client, message, id1, id2, ronde) {
+    PvP: async function (client, message, id1, id2, ronde) {
         const browser = await puppeteer.launch({
             'args': [
                 '--no-sandbox',
@@ -434,8 +482,14 @@ module.exports = {
             ]
         })
         const page = await browser.newPage()
-        await page.setViewport({ width: 0, height: 0 })
-        await page.goto(forum + 'index.php?showuser=' + id1, { waitUntil: 'load', timeout: 3000000 })
+        await page.setViewport({
+            width: 0,
+            height: 0
+        })
+        await page.goto(forum + 'index.php?showuser=' + id1, {
+            waitUntil: 'load',
+            timeout: 3000000
+        })
 
         let userData1 = await page.evaluate(() => {
             let uData = {}
@@ -454,7 +508,10 @@ module.exports = {
         if (typeof userData1.name == "undefined") return message.channel.send(`User ${id1} ghaib, gak ketemu!`)
         else if (userData1.HP == null) return message.channel.send(`User ${userData1.name} belum punya battle points, jadi belum bisa berantem, uwu`)
 
-        await page.goto(forum + 'index.php?showuser=' + id2, { waitUntil: 'load', timeout: 3000000 })
+        await page.goto(forum + 'index.php?showuser=' + id2, {
+            waitUntil: 'load',
+            timeout: 3000000
+        })
 
         let userData2 = await page.evaluate(() => {
             let uData = {}
