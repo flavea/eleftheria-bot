@@ -113,10 +113,10 @@ module.exports = {
                 waitUntil: 'load',
                 timeout: 3000000
             })
-            await page.type('.memberlist-namesearch', camper)
+            await page.type('#ipbwrapper > div.d-style > form > div:nth-child(3) > center > input', camper)
 
             await Promise.all([
-                page.click('#ipbwrapper > div.d-style > form > div:nth-child(3) > center > input'),
+                page.click('#ipbwrapper > div.d-style > form > div.darkrow1 > center > input'),
                 page.waitForNavigation({
                     waitUntil: 'load'
                 }),
