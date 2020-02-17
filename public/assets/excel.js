@@ -122,7 +122,7 @@ function processData(data) {
             let ch = $('.characterTemp').clone().removeClass('characterTemp').addClass('character')
             for (let j = 1; j < keys.length; j++) {
                 if (typeof data[i][j] != 'undefined') {
-                    if (keys[j].keyName == 'Full Name' && data[i][j] != '') {
+                    if (keys[j].keyName == 'Account Name' && data[i][j] != '') {
                         $('.name span', ch).text(data[i][j])
                     } else if (keys[j].keyName == 'Profile Link' && data[i][j] != '') {
                         $('#profButton', ch).attr("href", data[i][j]).css({
